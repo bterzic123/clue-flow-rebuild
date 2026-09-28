@@ -1,0 +1,1393 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="color-scheme" content="light">
+<meta http-equiv="Cache-Control" content="no-cache, must-revalidate">
+<title>Growth Audit — Clue</title>
+<link rel="icon" href="img/clue-mark.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  color-scheme: only light;
+  /* ---- Clue, extracted from their live screens ---- */
+  --cl-bg:#FBFAF7; --cl-card:#FFFFFF; --cl-field:#F1F0EC; --cl-line:#E5E3DE;
+  --cl-teal:#15748A; --cl-teal-dk:#0F5F72; --cl-soft:#DDEEF3; --cl-soft-ink:#15748A;
+  --cl-ink:#262626; --cl-txt:#555555; --cl-muted:#8C8B88;
+  --cl-red:#E13336; --cl-red-dk:#7A1624; --cl-pink:#FBE4E4; --cl-bar:#F6E7E9;
+  --cl-plum:#8A2D6E; --cl-plum-bg:#FCEAF5; --cl-star:#F2B33D;
+  --cl-w1:#DDF0FA; --cl-w2:#FDECE4; --cl-w3:#E4F5EE;
+  --m-period:#E2434B; --m-conceive:#4271C0; --m-nobleed:#117A6C; --m-preg:#6A5CC3; --m-peri:#9C3150;
+  --r-ctl:14px; --r-media:18px;
+  /* ---- the report shell, in Clue's own palette ---- */
+  --bg:#FBFAF7; --bg2:#FFFFFF; --surf:#FFFFFF;
+  --hair:rgba(38,38,38,.09); --hair2:rgba(38,38,38,.16);
+  --ink:#262626; --ink2:#51504D; --ink3:#8C8B88;
+  --accent:#15748A; --accent-lift:#11687C;
+  --panel:#FFFFFF; --panel-ink:#1C1C1B; --panel-muted:#6A6966; --panel-line:#ECEAE6;
+  --accent-ink:#0E5B6C;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);
+  font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+a{color:inherit}
+.wrap{max-width:1080px;margin:0 auto;padding:0 32px}
+@media(max-width:700px){.wrap{padding:0 20px}}
+
+/* ============ top bar ============ */
+.nav{position:sticky;top:0;z-index:70;background:rgba(251,250,247,.86);backdrop-filter:blur(18px) saturate(160%);
+  border-bottom:1px solid var(--hair)}
+.nav-in{max-width:1080px;margin:0 auto;padding:0 32px;height:58px;display:flex;align-items:center;gap:18px}
+@media(max-width:700px){.nav-in{padding:0 20px;gap:12px}}
+.nav-brand{display:flex;align-items:center;gap:9px;font-size:13.5px;font-weight:600;letter-spacing:-.01em}
+.nav-brand img{width:25px;height:26px;display:block;flex:none}
+.nav-brand span{color:var(--ink2);font-weight:500}
+.nav-brand b{color:var(--ink);font-weight:600}
+.nav-links{margin-left:auto;display:flex;gap:2px;align-items:center}
+.nav-links button{padding:7px 14px;border-radius:8px;font-size:13px;font-weight:600;color:var(--ink3);transition:.16s}
+.nav-links button:hover{color:var(--ink)}
+.nav-links button.on{color:var(--ink);background:#fff;box-shadow:0 1px 4px rgba(38,38,38,.08)}
+@media(max-width:640px){.nav-brand span{display:none}}
+
+.view{display:none}
+.view.on{display:block}
+
+/* ============ hero ============ */
+.hero{padding:104px 0 0;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-340px;left:50%;transform:translateX(-50%);
+  width:1100px;height:640px;border-radius:50%;pointer-events:none;
+  background:radial-gradient(closest-side,rgba(21,116,138,.14),transparent 72%)}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;z-index:0;
+  background:radial-gradient(40% 50% at 8% 20%,rgba(160,210,235,.34),transparent 70%),
+   radial-gradient(38% 45% at 92% 18%,rgba(240,175,175,.30),transparent 70%)}
+.hero>*{position:relative;z-index:1}
+.eyebrow{font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--accent-lift);margin-bottom:26px}
+.hero h1{font-size:76px;line-height:.98;font-weight:700;letter-spacing:-.045em;margin:0 0 24px}
+@media(max-width:820px){.hero h1{font-size:50px}.hero{padding-top:70px}}
+.hero .lede{font-size:20px;line-height:1.5;font-weight:400;color:var(--ink2);max-width:600px;margin:0 auto;letter-spacing:-.012em}
+@media(max-width:820px){.hero .lede{font-size:17px}}
+.hero .meta{margin-top:30px;font-size:12.5px;color:var(--ink3);letter-spacing:.02em}
+.hero .meta b{color:var(--ink2);font-weight:600}
+
+.stats{display:flex;justify-content:center;gap:0;margin:70px auto 0;max-width:760px;
+  border-top:1px solid var(--hair);border-bottom:1px solid var(--hair)}
+.stat{flex:1;padding:26px 14px;text-align:center;border-left:1px solid var(--hair)}
+.stat:first-child{border-left:none}
+.stat b{display:block;font-size:26px;font-weight:700;letter-spacing:-.03em;color:var(--ink)}
+.stat span{display:block;font-size:11.5px;color:var(--ink3);margin-top:5px;line-height:1.35}
+@media(max-width:700px){.stat b{font-size:19px}.stat{padding:18px 8px}}
+
+.fb{max-width:760px;margin:0 auto;padding:30px 0 0;display:grid;grid-template-columns:1fr 1fr;gap:26px;text-align:left}
+@media(max-width:700px){.fb{grid-template-columns:1fr;gap:20px;padding-top:24px}}
+.fb-k{grid-column:1/-1;font-size:10.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink3);text-align:center;margin-bottom:-6px}
+.fb-i{display:flex;gap:12px;align-items:flex-start}
+.fb-i .tick{width:18px;height:18px;flex:none;margin-top:3px;border-radius:50%;background:rgba(21,116,138,.14);
+  display:grid;place-items:center}
+.fb-i .tick svg{width:10px;height:10px;stroke:var(--accent-lift);stroke-width:3;fill:none;
+  stroke-linecap:round;stroke-linejoin:round}
+.fb-i p{font-size:14px;line-height:1.55;color:var(--ink2);margin:0}
+.fb-i p b{color:var(--ink);font-weight:700}
+
+.sec{padding:96px 0}
+.sec-k{font-size:11.5px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink3);margin-bottom:18px}
+.sec h2{font-size:38px;line-height:1.14;font-weight:700;letter-spacing:-.035em;margin:0 0 20px;max-width:680px}
+@media(max-width:820px){.sec h2{font-size:29px}.sec{padding:64px 0}}
+.sec p.body{font-size:17px;line-height:1.66;color:var(--ink2);max-width:640px;margin:0 0 18px;letter-spacing:-.008em}
+.sec p.body b{color:var(--ink);font-weight:600}
+.rule{height:1px;background:var(--hair);margin:0}
+
+.notes{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:40px;max-width:820px}
+@media(max-width:760px){.notes{grid-template-columns:1fr}}
+.note{background:var(--surf);border:1px solid var(--hair);box-shadow:0 2px 10px rgba(38,38,38,.04);border-radius:16px;padding:24px 26px}
+.note h4{font-size:15px;font-weight:700;letter-spacing:-.015em;margin:0 0 8px}
+.note p{font-size:14px;line-height:1.6;color:var(--ink2);margin:0}
+
+.ideas{display:flex;flex-direction:column;gap:0;margin-top:14px;border-top:1px solid var(--hair)}
+.idea{display:grid;grid-template-columns:52px 1fr 180px;gap:26px;align-items:start;
+  padding:30px 4px;border-bottom:1px solid var(--hair);text-align:left;width:100%;transition:.18s}
+.idea:hover{background:rgba(255,255,255,.7)}
+@media(max-width:780px){.idea{grid-template-columns:38px 1fr;gap:16px}}
+.idea .no{font-size:13px;font-weight:700;color:var(--ink3);padding-top:4px;letter-spacing:.02em}
+.idea h3{font-size:21px;line-height:1.25;font-weight:700;letter-spacing:-.024em;margin:0 0 7px}
+@media(max-width:820px){.idea h3{font-size:18px}}
+.idea p{font-size:14.5px;line-height:1.6;color:var(--ink2);margin:0;max-width:540px}
+.idea .out{text-align:right;padding-top:3px}
+@media(max-width:780px){.idea .out{grid-column:2;text-align:left;padding-top:12px}}
+.idea .out b{display:block;font-size:19px;font-weight:700;letter-spacing:-.025em;color:var(--accent-lift);white-space:nowrap}
+.idea .out b+b{margin-top:2px}
+.idea .out span{display:block;font-size:10.5px;color:var(--ink3);margin-top:3px;letter-spacing:.04em;text-transform:uppercase;font-weight:600}
+.idea .seeit{display:inline-flex;align-items:center;gap:5px;margin-top:11px;font-size:12.5px;
+  font-weight:600;color:var(--accent-lift)}
+.idea .seeit svg{width:12px;height:12px}
+
+.band{background:var(--surf);border:1px solid var(--hair);border-radius:28px;box-shadow:0 2px 10px rgba(38,38,38,.04);padding:40px 44px;margin-top:44px;
+  display:flex;align-items:center;gap:36px;flex-wrap:wrap}
+@media(max-width:700px){.band{padding:28px 24px;gap:22px}}
+.band .lab{font-size:11.5px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.band .txt{flex:1;min-width:240px}
+.band .txt p{font-size:15.5px;line-height:1.6;color:var(--ink2);margin:0}
+.band .nums{display:flex;gap:34px}
+.band .nums div b{display:block;font-size:30px;font-weight:700;letter-spacing:-.035em;color:var(--accent-lift)}
+.band .nums div span{display:block;font-size:11px;color:var(--ink3);margin-top:2px;letter-spacing:.04em;
+  text-transform:uppercase;font-weight:600}
+
+.cta-row{display:flex;justify-content:center;margin-top:52px;align-items:center;gap:22px;flex-wrap:wrap}
+.bigbtn{display:inline-flex;align-items:center;gap:9px;background:var(--accent);color:#fff;
+  font-size:15px;font-weight:700;letter-spacing:-.01em;padding:15px 26px;border-radius:30px;transition:.16s}
+.bigbtn:hover{filter:brightness(1.1)}
+.bigbtn svg{width:15px;height:15px}
+
+.foot{border-top:1px solid var(--hair);padding:36px 0 70px;font-size:12.5px;line-height:1.6;color:var(--ink3)}
+
+/* ============ prototype stage ============ */
+.stage{display:grid;grid-template-columns:minmax(440px,1fr) minmax(400px,470px);gap:0;
+  align-items:start;min-height:calc(100vh - 58px)}
+@media(max-width:1080px){.stage{grid-template-columns:1fr}}
+.phonecol{padding:34px 24px 46px;display:flex;flex-direction:column;align-items:center;gap:18px}
+.panelcol{border-left:1px solid var(--hair);background:var(--panel);color:var(--panel-ink);
+  min-height:calc(100vh - 58px);position:sticky;top:58px;max-height:calc(100vh - 58px);overflow-y:auto}
+@media(max-width:1080px){.panelcol{position:static;max-height:none;border-left:none;border-top:1px solid var(--hair)}}
+
+.phone{position:relative;width:390px;height:844px;flex:none;background:#000;border:11px solid #000;
+  border-radius:46px;box-shadow:0 0 0 1.5px #DAD7D0,0 34px 70px -22px rgba(38,38,38,.35)}
+.phone-in{position:absolute;inset:0;border-radius:36px;overflow:hidden;background:var(--cl-bg);color-scheme:only light}
+.island{position:absolute;top:9px;left:50%;transform:translateX(-50%);width:104px;height:30px;background:#000;
+  border-radius:16px;z-index:60;pointer-events:none}
+.sbar{position:absolute;top:0;left:0;right:0;height:50px;z-index:55;pointer-events:none;display:flex;
+  align-items:center;justify-content:space-between;padding:14px 28px 0 34px;font:700 15px/1 'Figtree',sans-serif;color:#111;transition:color .3s}
+.sbar.light{color:#fff}
+.sbar .glyphs{display:flex;gap:5px;align-items:center}
+.homebar{position:absolute;bottom:7px;left:50%;transform:translateX(-50%);width:134px;height:5px;
+  border-radius:3px;background:#111;z-index:56;pointer-events:none;transition:background .3s}
+.homebar.light{background:rgba(255,255,255,.9)}
+.screenwrap{position:absolute;inset:0;overflow:hidden;background:var(--cl-bg)}
+
+/* ============ phone screens — Clue's system, all prefixed scr-/cl- ============ */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--cl-bg);color:var(--cl-ink);
+  font-family:'Figtree',-apple-system,sans-serif;
+  transform:translateX(100%);transition:transform .36s cubic-bezier(.32,.72,0,1);z-index:10;will-change:transform}
+.scr.is-active{transform:translateX(0);z-index:20}
+.scr.is-past{transform:translateX(-24%)}
+.scr.sheet{transform:translateY(100%)}
+.scr.sheet.is-active{transform:translateY(0);z-index:30}
+.scr.nofx{transition:none}
+.scr-top{flex:none;padding:54px 22px 0;position:relative;z-index:2}
+.scr-body{flex:1;min-height:0;overflow-y:auto;overflow-x:hidden;padding:0 22px;scrollbar-width:none;position:relative;z-index:2}
+.scr-body::-webkit-scrollbar{display:none}
+.scr-body.dock{display:flex;flex-direction:column}
+.scr-foot{flex:none;padding:12px 22px 30px;position:relative;z-index:2}
+
+.cl-back{width:36px;height:36px;display:grid;place-items:center;color:var(--cl-teal);margin-left:-8px}
+.cl-back svg{width:22px;height:22px}
+.cl-h{font-size:24px;line-height:1.2;font-weight:600;letter-spacing:-.018em;margin:14px 0 0;text-align:center;color:var(--cl-ink)}
+.cl-sub{font-size:13.5px;line-height:1.45;color:var(--cl-txt);margin:10px 8px 0;text-align:center;font-weight:400}
+.cl-icon{width:62px;height:62px;border-radius:50%;background:var(--cl-pink);display:grid;place-items:center;margin:16px auto 0}
+.cl-icon.teal{background:var(--cl-soft)}
+.cl-icon img{width:36px;height:38px;display:block}
+.cl-icon svg{width:28px;height:28px}
+
+.cl-btn{display:block;width:100%;height:50px;border-radius:25px;background:var(--cl-teal);color:#fff;
+  font:600 15.5px/1 'Figtree',sans-serif;letter-spacing:.005em;transition:filter .15s}
+.cl-btn:hover{filter:brightness(1.07)}
+.cl-btn.soft{background:var(--cl-soft);color:var(--cl-soft-ink)}
+.cl-pair{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.cl-link{display:block;width:100%;text-align:center;font:600 14.5px/1 'Figtree',sans-serif;color:var(--cl-teal);padding:12px 0 16px}
+
+/* welcome carousel */
+.scr--welcome{background:var(--cl-w1);transition:transform .36s cubic-bezier(.32,.72,0,1),background .4s}
+.scr--welcome.p1{background:var(--cl-w2)} .scr--welcome.p2{background:var(--cl-w3)}
+.cl-dash{display:flex;gap:8px;justify-content:center;padding-top:6px}
+.cl-dash button{width:34px;height:14px;display:grid;place-items:center}
+.cl-dash button i{display:block;width:34px;height:3px;border-radius:2px;background:rgba(255,255,255,.95);transition:.3s}
+.cl-dash button.on i{background:#2A2A2A}
+.cl-wh{font-size:23px;line-height:1.28;font-weight:600;letter-spacing:-.015em;text-align:center;margin:22px 0 0;color:var(--cl-ink)}
+.cl-wh em{font-style:normal;display:block}
+.cl-pages{position:relative;height:100%}
+.cl-page{position:absolute;inset:0;opacity:0;pointer-events:none;transition:opacity .35s;display:flex;align-items:center;justify-content:center}
+.cl-page.on{opacity:1;pointer-events:auto}
+.cl-ring{position:relative;width:300px;height:300px}
+.cl-ring svg{width:100%;height:100%;display:block}
+.cl-ring .c{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:0 60px}
+.cl-ring .c small{font-size:12.5px;color:var(--cl-txt)}
+.cl-ring .c small b{color:var(--cl-ink);font-weight:700}
+.cl-ring .c strong{font-size:21px;line-height:1.25;font-weight:600;color:var(--cl-ink);margin-top:8px;letter-spacing:-.01em}
+.cl-ring .c span{font-size:11.5px;color:var(--cl-teal);margin-top:8px;font-weight:600}
+.cl-tiles{display:grid;grid-template-columns:repeat(3,86px);gap:12px 22px;align-items:start}
+.cl-tile{text-align:center;font-size:11.5px;color:var(--cl-txt);line-height:1.2}
+.cl-tile i{display:grid;place-items:center;width:62px;height:62px;border-radius:12px;margin:0 auto 6px;box-shadow:0 3px 8px rgba(0,0,0,.08)}
+.cl-tile i svg{width:30px;height:30px;stroke:#fff;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.cl-tile.dn{margin-top:34px}
+.cl-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;width:100%}
+.cl-sc{background:#fff;border-radius:12px;padding:10px 10px 12px;box-shadow:0 2px 8px rgba(0,0,0,.05);font-size:10.5px;color:var(--cl-ink)}
+.cl-sc h5{font-size:11px;font-weight:700;margin-bottom:8px}
+.cl-sc .r{display:flex;align-items:center;gap:7px;background:#F4F8F7;border-radius:8px;padding:6px 8px;margin-top:6px}
+.cl-sc .r.w{background:#FDF1EC}
+.cl-sc .r b{display:block;font-size:13px}
+.cl-sc .r small{display:block;font-size:9px;color:var(--cl-muted)}
+.cl-sc .r i{width:14px;height:14px;border-radius:50%;border:2.5px solid var(--cl-teal);flex:none}
+.cl-sc .r.w i{border-color:#E8A07A}
+.cl-flow{display:flex;flex-direction:column;gap:5px}
+.cl-flow div{display:flex;gap:3px}
+.cl-flow span{flex:1;height:7px;border-radius:4px;background:#F2B9BE}
+.cl-flow span.d{background:#C8243A} .cl-flow span.m{background:#E2434B}
+.cl-bars{display:flex;align-items:flex-end;gap:4px;height:44px;margin-top:6px}
+.cl-bars span{flex:1;background:var(--m-conceive);border-radius:2px 2px 0 0}
+.cl-sl{height:4px;border-radius:2px;background:#EEE;margin-top:9px;position:relative}
+.cl-sl i{position:absolute;top:0;height:4px;border-radius:2px;background:#E8A07A}
+
+/* mode cards */
+.cl-modes{display:flex;flex-direction:column;gap:14px;margin-top:22px;padding-bottom:10px}
+.cl-mode{position:relative;display:flex;align-items:center;gap:12px;width:100%;text-align:left;border-radius:12px;padding:20px 18px 20px 20px;
+  color:#fff;overflow:hidden;min-height:102px;transition:transform .12s,box-shadow .16s}
+.cl-mode::before{content:'';position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(34% 60% at 88% 18%,rgba(255,255,255,.14),transparent 70%),radial-gradient(40% 70% at 62% 110%,rgba(255,255,255,.1),transparent 70%)}
+.cl-mode:active{transform:scale(.985)}
+.cl-mode.on{box-shadow:0 0 0 3px var(--cl-bg),0 0 0 5px currentColor}
+.cl-mode div{flex:1;position:relative}
+.cl-mode b{display:block;font-size:15.5px;font-weight:700}
+.cl-mode span{display:block;font-size:13px;line-height:1.4;margin-top:8px;opacity:.94}
+.cl-mode svg{width:20px;height:20px;flex:none;position:relative}
+
+/* calendar */
+.cl-cal{margin-top:24px}
+.cl-calh{display:flex;align-items:center;justify-content:space-between;padding:0 2px}
+.cl-calh b{font-size:14px;font-weight:600;color:var(--cl-ink)}
+.cl-calh b i{font-style:normal;color:var(--cl-teal);margin-left:4px}
+.cl-calh div{display:flex;gap:14px}
+.cl-calh button{width:30px;height:30px;display:grid;place-items:center;color:var(--cl-teal)}
+.cl-calh button[disabled]{color:#CFCDC8;cursor:default}
+.cl-calh svg{width:18px;height:18px}
+.cl-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px 0;margin-top:14px;text-align:center}
+.cl-grid .dw{font-size:10.5px;color:var(--cl-muted);font-weight:600;padding-bottom:8px;letter-spacing:.03em}
+.cl-grid button{height:42px;display:grid;place-items:center;font:500 15px/1 'Figtree',sans-serif;color:var(--cl-ink)}
+.cl-grid button span{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;transition:.14s}
+.cl-grid button.on span{background:var(--cl-soft);color:var(--cl-teal);font-weight:700}
+.cl-grid button.today span{box-shadow:inset 0 0 0 1.5px var(--cl-line)}
+.cl-grid button[disabled]{color:#CFCDC8;cursor:default}
+
+/* wheel */
+.cl-wheelwrap{position:relative;margin:34px auto 0;width:100%;height:220px;display:flex;align-items:stretch}
+.cl-wheelbar{position:absolute;left:0;right:0;top:88px;height:44px;border-radius:6px;background:var(--cl-bar);pointer-events:none}
+.cl-wheel{position:relative;flex:1;height:220px;overflow-y:scroll;scroll-snap-type:y mandatory;scrollbar-width:none;
+  -webkit-mask-image:linear-gradient(180deg,transparent,#000 30%,#000 70%,transparent);
+          mask-image:linear-gradient(180deg,transparent,#000 30%,#000 70%,transparent)}
+.cl-wheel::-webkit-scrollbar{display:none}
+.cl-wheel .cl-sp{height:88px}
+.cl-wheel .cl-it{height:44px;scroll-snap-align:center;display:flex;align-items:center;justify-content:center;
+  font:500 17px/1 'Figtree',sans-serif;color:var(--cl-ink)}
+
+/* loader */
+.cl-loadwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%}
+.cl-bloom{width:96px;height:102px;margin-bottom:26px;animation:bloom 2.6s ease-in-out infinite}
+@keyframes bloom{0%,100%{transform:rotate(0) scale(1)}50%{transform:rotate(45deg) scale(1.08)}}
+.cl-load-h{font-size:22px;font-weight:600;letter-spacing:-.015em;color:var(--cl-ink);text-align:center;margin:0 0 22px}
+.cl-lsteps{width:100%;max-width:300px;display:flex;flex-direction:column;gap:13px;margin-bottom:28px}
+.cl-ls{display:flex;align-items:center;gap:11px;font-size:14.5px;font-weight:500;color:#B5B3AE;transition:.35s}
+.cl-ls.on{color:var(--cl-ink)}
+.cl-ls .d{width:22px;height:22px;flex:none;border-radius:50%;border:2px solid #D8D6D1;display:grid;place-items:center;transition:.35s}
+.cl-ls.on .d{background:var(--cl-teal);border-color:var(--cl-teal)}
+.cl-ls .d svg{width:12px;height:12px;stroke:#fff;stroke-width:3.2;fill:none;opacity:0;stroke-linecap:round;stroke-linejoin:round}
+.cl-ls.on .d svg{opacity:1}
+.cl-ls b{font-weight:700}
+.cl-quote{width:100%;max-width:310px;background:#fff;border-radius:var(--r-ctl);padding:16px 18px;min-height:116px;box-shadow:0 2px 10px rgba(0,0,0,.04)}
+.cl-quote p{font-size:13.5px;line-height:1.5;color:var(--cl-txt)}
+.cl-quote b{display:block;margin-top:9px;font-size:12px;font-weight:700;color:var(--cl-muted)}
+.cl-qd{display:flex;gap:5px;justify-content:center;margin-top:12px}
+.cl-qd i{width:6px;height:6px;border-radius:50%;background:#D8D6D1;transition:.3s}
+.cl-qd i.on{background:var(--cl-teal);width:16px;border-radius:3px}
+
+/* payoff */
+.cl-pay .cl-ring{margin:12px auto 0;width:250px;height:250px}
+.cl-rows{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.cl-row{display:flex;align-items:center;gap:12px;background:var(--cl-card);border-radius:var(--r-ctl);padding:11px 14px;box-shadow:0 1px 6px rgba(0,0,0,.035)}
+.cl-row .dot{width:12px;height:12px;border-radius:50%;flex:none}
+.cl-row div{flex:1;font-size:13px;color:var(--cl-txt);line-height:1.3}
+.cl-row div b{display:block;font-size:14.5px;color:var(--cl-ink);font-weight:600}
+.cl-row .pm{display:flex;gap:6px;flex:none}
+.cl-row .pm button{width:30px;height:30px;border-radius:50%;background:var(--cl-soft);color:var(--cl-teal);font:700 17px/1 'Figtree',sans-serif}
+.cl-lock{display:flex;align-items:center;gap:12px;margin-top:8px;border:1.5px dashed #D6D3CD;border-radius:var(--r-ctl);padding:11px 14px}
+.cl-lock svg{width:20px;height:20px;flex:none;stroke:var(--cl-plum);stroke-width:2;fill:none}
+.cl-lock div{font-size:12.5px;line-height:1.4;color:var(--cl-txt)}
+.cl-lock div b{display:block;color:var(--cl-ink);font-size:13.5px;font-weight:600}
+
+/* paywall */
+.scr--pay .scr-top{padding:50px 22px 0}
+.cl-x{width:36px;height:36px;display:grid;place-items:center;color:var(--cl-teal);margin-left:-8px}
+.cl-x svg{width:20px;height:20px}
+.cl-goal{display:table;margin:0 auto;max-width:100%;white-space:nowrap;background:var(--cl-field);border-radius:14px;padding:6px 12px;font-size:12.5px;font-weight:600;color:var(--cl-ink)}
+.cl-goal i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:7px;vertical-align:1px}
+.cl-payh{font-size:22px;line-height:1.2;font-weight:600;letter-spacing:-.018em;text-align:center;margin:10px 8px 0;color:var(--cl-ink)}
+.cl-stars{display:flex;justify-content:center;gap:3px;margin-top:10px}
+.cl-stars svg{width:23px;height:23px;fill:var(--cl-star);stroke:#C98C1C;stroke-width:.8}
+.cl-rate{text-align:center;font-size:12.5px;color:var(--cl-txt);margin-top:6px}
+.cl-rate b{color:var(--cl-ink);font-weight:700}
+.cl-rt{text-align:center;font-size:14px;font-weight:700;margin-top:10px;color:var(--cl-ink)}
+.cl-rq{text-align:center;font-size:12.5px;line-height:1.5;color:var(--cl-txt);margin:6px 4px 0}
+.cl-user{display:table;margin:9px auto 0;background:var(--cl-field);border-radius:10px;padding:3px 10px;font-size:11.5px;color:var(--cl-txt)}
+.cl-plans{display:flex;flex-direction:column;gap:12px;margin-top:12px;padding-bottom:4px}
+.cl-plan{display:block;width:100%;text-align:left;background:var(--cl-card);border:2px solid var(--cl-line);border-radius:12px;overflow:hidden;transition:.16s}
+.cl-plan .cl-band{display:none;background:var(--cl-plum);color:#fff;font-size:11.5px;font-weight:600;text-align:center;padding:5px 0}
+.cl-plan .in{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:13px 16px}
+.cl-plan .t{display:block;font-size:15px;font-weight:600;color:var(--cl-ink)}
+.cl-plan .s{display:block;font-size:12.5px;color:var(--cl-txt);margin-top:4px}
+.cl-plan .p{font-size:13.5px;font-weight:600;color:var(--cl-ink);white-space:nowrap}
+.cl-plan.on{border-color:var(--cl-plum);background:var(--cl-plum-bg)}
+.cl-plan.on .cl-band{display:block}
+.cl-plan.on .t{font-size:19px;color:var(--cl-plum)}
+.cl-plan.on .s,.cl-plan.on .p{color:var(--cl-plum)}
+.cl-fine{font-size:11.5px;line-height:1.5;color:var(--cl-txt);text-align:center;margin-top:10px}
+.cl-fine b{color:var(--cl-ink);font-weight:700}
+.cl-legal{display:flex;justify-content:center;gap:40px;margin-top:9px}
+.cl-legal a{font-size:11.5px;color:var(--cl-teal);text-decoration:none;font-weight:600}
+
+/* offer sheet */
+.scr--offer{background:var(--cl-bg);border-radius:0}
+.cl-off-top{display:flex;align-items:center;justify-content:space-between}
+.cl-save{background:var(--cl-plum);color:#fff;font-size:12px;font-weight:700;border-radius:10px;padding:4px 10px}
+.cl-cmp{margin-top:12px;background:var(--cl-card);border-radius:var(--r-ctl);padding:4px 14px;box-shadow:0 1px 6px rgba(0,0,0,.04)}
+.cl-cmp .r{display:grid;grid-template-columns:1fr 46px 46px;align-items:center;gap:4px;padding:7px 0;border-top:1px solid var(--cl-line);font-size:12.5px;line-height:1.3;color:var(--cl-txt)}
+.cl-cmp .r:first-child{border-top:none;font-size:11px;font-weight:700;color:var(--cl-muted);letter-spacing:.04em;text-transform:uppercase}
+.cl-cmp .r:first-child span:last-child{color:var(--cl-plum)}
+.cl-cmp .r span:nth-child(n+2){text-align:center}
+.cl-cmp svg{width:16px;height:16px;stroke:var(--cl-teal);stroke-width:3;fill:none;stroke-linecap:round;stroke-linejoin:round;display:inline-block}
+.cl-cmp .no{color:#C9C6C0;font-weight:700}
+.cl-oprice{margin-top:16px;border:2px solid var(--cl-plum);background:var(--cl-plum-bg);border-radius:12px;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cl-oprice b{display:block;font-size:18px;font-weight:600;color:var(--cl-plum)}
+.cl-oprice small{display:block;font-size:12.5px;color:var(--cl-plum);margin-top:3px}
+.cl-oprice small s{opacity:.7}
+.cl-oprice .p{font-size:14px;font-weight:700;color:var(--cl-plum);white-space:nowrap}
+
+/* account */
+.cl-auth{display:flex;flex-direction:column;gap:12px}
+.cl-auth button{height:48px;border-radius:24px;font:600 14.5px/1 'Figtree',sans-serif;display:flex;align-items:center;justify-content:center;gap:8px}
+.cl-auth .ap{background:#000;color:#fff}
+.cl-auth .gg{background:#fff;border:1.5px solid #2A2A2A;color:#222}
+.cl-auth .em{background:#fff;border:1.5px solid var(--cl-teal);color:var(--cl-teal)}
+.cl-auth svg{width:17px;height:17px}
+.cl-signin{text-align:center;font-size:12.5px;color:var(--cl-txt);margin-top:12px}
+.cl-signin b{color:var(--cl-teal)}
+.cl-saved{margin-top:22px;background:var(--cl-card);border-radius:var(--r-ctl);padding:12px 14px;display:flex;gap:12px;align-items:center;box-shadow:0 1px 6px rgba(0,0,0,.04)}
+.cl-saved .dot{width:12px;height:12px;border-radius:50%;background:var(--cl-red);flex:none}
+.cl-saved div{font-size:12.5px;color:var(--cl-txt);line-height:1.35}
+.cl-saved div b{display:block;color:var(--cl-ink);font-size:14px;font-weight:600}
+
+/* reminder */
+.cl-set{margin-top:24px;background:var(--cl-card);border-radius:var(--r-ctl);padding:0 14px;box-shadow:0 1px 6px rgba(0,0,0,.04)}
+.cl-set button{display:flex;align-items:center;justify-content:space-between;width:100%;height:50px;border-top:1px solid var(--cl-line);font-size:14px;color:var(--cl-ink)}
+.cl-set button:first-child{border-top:none}
+.cl-set button span{display:flex;align-items:center;gap:8px;color:var(--cl-txt);font-size:13px}
+.cl-set svg{width:16px;height:16px;color:var(--cl-teal)}
+.cl-notif{margin-top:16px;background:var(--cl-field);border-radius:16px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start}
+.cl-notif img{width:26px;height:28px;flex:none;margin-top:2px}
+.cl-notif div{flex:1;font-size:13px;color:var(--cl-txt);line-height:1.35}
+.cl-notif div b{display:block;color:var(--cl-ink);font-size:13.5px;font-weight:700}
+.cl-notif small{font-size:11px;color:var(--cl-muted);white-space:nowrap}
+.cl-dlg{position:absolute;inset:0;z-index:40;background:rgba(0,0,0,.34);display:none;align-items:center;justify-content:center}
+.cl-dlg.on{display:flex}
+.cl-dlg .box{width:270px;background:rgba(242,242,242,.97);border-radius:14px;text-align:center;overflow:hidden;font-family:-apple-system,'Figtree',sans-serif}
+.cl-dlg .box p{padding:18px 16px 16px;font-size:13px;line-height:1.35;color:#111}
+.cl-dlg .box p b{display:block;font-size:16px;margin-bottom:6px;line-height:1.25}
+.cl-dlg .row{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid rgba(0,0,0,.14)}
+.cl-dlg .row button{height:44px;font-size:16px;color:#0A7AFF}
+.cl-dlg .row button+button{border-left:1px solid rgba(0,0,0,.14);font-weight:600}
+
+/* dark mode — an approximation: no dark frames were supplied */
+.phone-in.dark{--cl-bg:#141517;--cl-card:#1F2124;--cl-field:#2A2C30;--cl-line:#33363B;--cl-soft:#173A44;--cl-soft-ink:#8FD0E0;
+  --cl-ink:#F2F1EE;--cl-txt:#B2B0AB;--cl-muted:#85837F;--cl-pink:#3A2123;--cl-bar:#2E2426;--cl-plum-bg:#35182B;--cl-plum:#E08BC4;
+  --cl-w1:#15252D;--cl-w2:#2B1D19;--cl-w3:#15271F;--cl-teal:#2A93AB;background:var(--cl-bg)}
+.phone-in.dark .screenwrap{background:var(--cl-bg)}
+.phone-in.dark .cl-back,.phone-in.dark .cl-x,.phone-in.dark .cl-link,.phone-in.dark .cl-calh button,.phone-in.dark .cl-legal a,.phone-in.dark .cl-signin b{color:#6FC2D6}
+.phone-in.dark .cl-plan.on .cl-band{background:#8A2D6E}
+.phone-in.dark .cl-save{background:#8A2D6E}
+.phone-in.dark .cl-sc{background:var(--cl-card);color:var(--cl-ink)}
+.phone-in.dark .cl-sc .r{background:#1A2A28}.phone-in.dark .cl-sc .r.w{background:#2E221C}
+.phone-in.dark .cl-sl{background:#33363B}
+.phone-in.dark .cl-quote{background:var(--cl-card)}
+.phone-in.dark .cl-ls{color:#5E5C58}.phone-in.dark .cl-ls.on{color:var(--cl-ink)}
+.phone-in.dark .cl-ls .d{border-color:#44474C}
+.phone-in.dark .cl-qd i{background:#44474C}.phone-in.dark .cl-qd i.on{background:var(--cl-teal)}
+.phone-in.dark .cl-grid button[disabled],.phone-in.dark .cl-calh button[disabled]{color:#4A4C50}
+.phone-in.dark .cl-lock{border-color:#44474C}
+.phone-in.dark .cl-auth .gg{background:var(--cl-card);border-color:#D8D6D1;color:var(--cl-ink)}
+.phone-in.dark .cl-auth .em{background:var(--cl-card);border-color:#6FC2D6;color:#6FC2D6}
+.phone-in.dark .cl-auth .ap{background:#fff;color:#000}
+.phone-in.dark .cl-dash button i{background:rgba(255,255,255,.25)}.phone-in.dark .cl-dash button.on i{background:#F2F1EE}
+.phone-in.dark .cl-cmp .no{color:#55575B}
+.phone-in.dark .ringtrack{stroke:#2C2E32}
+.phone-in.dark .ringpill{fill:#1F2124;stroke:#3A3D42}
+.phone-in.dark .ringpill-t{fill:#F2F1EE}
+.phone-in.dark .cl-dlg .box{background:rgba(44,44,46,.97)}
+.phone-in.dark .cl-dlg .box p{color:#F2F2F2}
+.phone-in.dark .cl-dlg .row,.phone-in.dark .cl-dlg .row button+button{border-color:rgba(255,255,255,.16)}
+
+/* prototype toolbar, walkthrough, QR */
+.tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;max-width:520px}
+.seg{display:inline-flex;align-items:center;background:#fff;border:1px solid #E3E1DC;border-radius:20px;padding:3px;gap:2px}
+.seg button{padding:6px 11px;border-radius:16px;font:600 12px/1 'Plus Jakarta Sans',sans-serif;color:var(--ink2);transition:.14s}
+.seg button.on{background:var(--ink);color:#fff}
+.demo-btn{display:inline-flex;align-items:center;gap:7px;padding:9px 14px;border-radius:20px;background:var(--accent);color:#fff;
+  font:700 12px/1 'Plus Jakarta Sans',sans-serif}
+.demo-cap{width:390px;max-width:calc(100vw - 24px);background:#fff;border:1px solid var(--hair);border-radius:16px;padding:14px 14px 12px;
+  display:flex;align-items:center;gap:12px;position:relative;overflow:hidden;box-shadow:0 4px 18px rgba(38,38,38,.07)}
+.demo-cap .bar{position:absolute;left:0;top:0;right:0;height:3px;background:#EFEDE9}
+.demo-cap .bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .25s linear}
+.demo-cap p{flex:1;font-size:13.5px;line-height:1.45;color:var(--ink);margin:0;font-weight:500}
+.demo-cap button{font:700 12px/1 'Plus Jakarta Sans',sans-serif;color:var(--ink2);padding:7px 10px;border-radius:12px;border:1px solid #E3E1DC;flex:none}
+.finger{position:absolute;z-index:90;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(38,38,38,.26);
+  border:2px solid rgba(255,255,255,.95);box-shadow:0 4px 14px rgba(0,0,0,.25);pointer-events:none;opacity:0;left:50%;top:60%;
+  transition:left .32s cubic-bezier(.4,0,.2,1),top .32s cubic-bezier(.4,0,.2,1),opacity .2s,transform .15s}
+.finger.show{opacity:1}
+.finger.press{transform:scale(.78);background:rgba(38,38,38,.4)}
+.qr{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid var(--hair);border-radius:16px;padding:10px 16px 10px 10px;text-align:left}
+.qr img{width:123px;height:123px;display:block;image-rendering:pixelated;border-radius:6px}
+.qr span{font-size:12.5px;line-height:1.45;color:var(--ink2)}
+.qr b{display:block;color:var(--ink);font-size:13.5px}
+@media(max-width:1080px){.qr{display:none}}
+
+#view-proto .tools{order:0} #view-proto .demo-cap{order:1} #view-proto .phone{order:2} #view-proto .chips{order:3}
+#view-proto .chiphint{order:4} #view-proto .qr{order:5}
+.cta-row .qr{order:2}
+/* on a phone: the prototype is the screen */
+@media(max-width:500px){
+  #view-proto .phonecol{padding:0 0 28px;gap:14px}
+  #view-proto .phone{width:100vw;height:calc(100svh - 58px);min-height:640px;border:0;border-radius:0;box-shadow:none;order:1}
+  #view-proto .phone-in{border-radius:0}
+  #view-proto .island,#view-proto .sbar,#view-proto .homebar{display:none}
+  #view-proto .scr-top{padding-top:14px}
+  #view-proto .scr--pay .scr-top{padding-top:10px}
+  #view-proto .scr-foot{padding-bottom:18px}
+  #view-proto .tools{order:3;padding:0 12px}
+  #view-proto .demo-cap{position:fixed;left:12px;right:12px;bottom:12px;width:auto;max-width:none;z-index:95}
+  #view-proto .chips{order:4;padding:0 12px}
+  #view-proto .chiphint{order:5}
+}
+
+.herobtns{display:flex;justify-content:center;margin-top:30px}
+.ghostbtn{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--hair2);color:var(--ink);font-size:14px;
+  font-weight:700;padding:9px 20px 9px 9px;border-radius:30px;box-shadow:0 2px 12px rgba(38,38,38,.06);transition:.16s}
+.ghostbtn:hover{box-shadow:0 4px 18px rgba(38,38,38,.1)}
+.ghostbtn .pl{width:30px;height:30px;border-radius:50%;background:var(--accent);display:grid;place-items:center}
+.ghostbtn .pl svg{width:12px;height:12px;fill:#fff;margin-left:2px}
+
+/* chips */
+.chips{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;max-width:470px;margin:0 auto}
+.chip{padding:7px 13px;border-radius:20px;border:1px solid #E3E1DC;background:#fff;
+  font:600 12px/1 'Plus Jakarta Sans',sans-serif;color:var(--ink2);transition:.14s}
+.chip:hover{color:var(--ink);border-color:#CBC8C1}
+.chip.offer{border-style:dashed;border-color:var(--accent);color:var(--accent-lift)}
+.chip.on{background:var(--accent);border-color:var(--accent);color:#fff;border-style:solid}
+.chiphint{text-align:center;font-size:11px;color:var(--ink3);margin:0;max-width:430px}
+
+/* ============ the short panel ============ */
+.pn{padding:30px 30px 60px}
+.pn-n{font-size:10.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--accent-ink)}
+.pn-n.ctx{color:var(--panel-muted)}
+.pn-t{font-size:23px;line-height:1.18;font-weight:700;letter-spacing:-.028em;margin:8px 0 0;color:var(--panel-ink)}
+.pn-hyp{font-size:15px;line-height:1.62;color:#34332F;margin:16px 0 0}
+.pn-hyp b{font-weight:700;color:var(--panel-ink)}
+.pn-out{margin-top:22px;border-top:1px solid var(--panel-line);padding-top:18px}
+.pn-out .lab{font-size:10px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:var(--panel-muted)}
+.pn-out .v{font-size:31px;font-weight:700;letter-spacing:-.035em;color:var(--accent-ink);margin-top:7px;line-height:1.05}
+.pn-kept{margin-top:22px;font-size:12.5px;line-height:1.55;color:var(--panel-muted)}
+.pn-kept b{color:#34332F;font-weight:700}
+.pn-foot{font-size:11.5px;line-height:1.55;color:var(--panel-muted);border-top:1px solid var(--panel-line);
+  padding-top:14px;margin-top:26px}
+.hidden{display:none !important}
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="nav-in">
+    <div class="nav-brand">
+      <img src="img/clue-mark.svg" alt="Clue">
+      <b>Growth Audit</b><span>· Clue</span>
+    </div>
+    <div class="nav-links">
+      <button class="on" data-view="over">Overview</button>
+      <button data-view="proto">Prototype</button>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= OVERVIEW ======================= -->
+<div class="view on" id="view-over">
+
+<div class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Growth Audit · September 2026</div>
+    <h1>Clue</h1>
+    <p class="lede">Five ideas to unlock more revenue from the traffic you already have.</p>
+    <div class="meta">Prepared by <b>Adapty</b> · based on your live iOS flow, your App Store listing and helloclue.com</div>
+    <div class="herobtns"><button class="ghostbtn" data-demo><span class="pl"><svg viewBox="0 0 24 24"><path d="M7 4.5v15l12-7.5z"/></svg></span>Watch the 30-second walkthrough</button></div>
+    <div class="stats">
+      <div class="stat"><b>30,000+</b><span>apps run subscriptions<br>on Adapty</span></div>
+      <div class="stat"><b>5</b><span>ideas, each rebuilt<br>as a working screen</span></div>
+      <div class="stat"><b>0</b><span>design changes<br>to your art direction</span></div>
+    </div>
+
+    <div class="fb">
+      <div class="fb-k">Built in Adapty Flow Builder</div>
+      <div class="fb-i">
+        <span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>Millions of dollars</b> in subscription revenue pass through Flow Builder every month.</p>
+      </div>
+      <div class="fb-i">
+        <span class="tick"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span>
+        <p><b>Nearly 500 apps</b> actively build their paywalls and onboarding in it — plenty of them past $100K MRR.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="sec">
+  <div class="wrap">
+    <div class="sec-k">What this is</div>
+    <h2>We opened Clue the way a new user does, then rebuilt the parts we think are leaving money on the table.</h2>
+    <p class="body">Adapty powers subscriptions for <b>30,000+ apps</b>, so we get to see what moves conversion and ARPU across the market rather than inside one app. We pointed that at Clue: installed it, went through all 27 screens from welcome to purchase, read your App Store listing and helloclue.com, and looked for gaps between what you already have and what you show people before the price.</p>
+    <p class="body">What follows is five ideas, not fifteen. Each one is a hypothesis you can A/B test, and each one is built into a clickable prototype so you can see it rather than imagine it. <b>The prototype uses your design, not ours.</b></p>
+
+    <div class="notes">
+      <div class="note">
+        <h4>We did not redesign your app</h4>
+        <p>Every screen in the prototype is yours: the cycle ring, the five mode cards, the calendar, the wheel with its pink bar, the plum trial card, the teal buttons. Only the order changed, plus a few things you already have but do not show at the right moment. This is not a design pitch.</p>
+      </div>
+      <div class="note">
+        <h4>You may have tested some of this</h4>
+        <p>We are working from the outside, so we cannot see your experiment history. If one of these is something you have already run, tell us and we will go deeper on the rest rather than repeat it.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="rule"></div>
+
+<div class="sec">
+  <div class="wrap">
+    <div class="sec-k">The five ideas</div>
+    <h2>Ranked by what we would test first.</h2>
+    <p class="body">Each one links straight to the screen in the prototype.</p>
+
+    <div class="ideas">
+      <button class="idea" data-jump="account">
+        <span class="no">01</span>
+        <span>
+          <h3>Ask for the account after the paywall</h3>
+          <p>Today sign-up is the eighth screen: Apple, Google or email, then a name and email form, before anyone has told Clue a single thing about their cycle. Ask once there is a prediction worth saving.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +8%</b><b>ARPU +17%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="payoff">
+        <span class="no">02</span>
+        <span>
+          <h3>Show the next-period date before the price</h3>
+          <p>The flow asks for the last period and the average cycle length, which is everything Clue needs to predict the next one. Then it goes to reminders, privacy and the paywall without ever showing the date. Your welcome ring is the right place to show it.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +10–15%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="paywall">
+        <span class="no">03</span>
+        <span>
+          <h3>Open the paywall on their mode and your 4.8</h3>
+          <p>Someone who tapped “Try to conceive” sees the same “Choose your plan” as everyone else. Your 4.8 from 405K App Store ratings and your 100M+ downloads appear nowhere in the flow.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +15–20%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="reminder">
+        <span class="no">04</span>
+        <span>
+          <h3>Move permissions and consent toggles past the paywall</h3>
+          <p>Nine of the 24 steps before the price are the tracking prompt, the reminder set-up and its three sheets, the notification prompt and four research and marketing toggles. Each one asks for a yes before the app has given anything back.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>CR +10–15%</b><span>to purchase</span></span>
+      </button>
+
+      <button class="idea" data-jump="offer">
+        <span class="no">05</span>
+        <span>
+          <h3>A second chance on close, at your $29.99 price</h3>
+          <p>Your App Store listing carries a $29.99 Clue Plus price next to $39.99, and helloclue.com already runs 25% off Clue Plus. The flow we walked never offers it. Show it once, when someone closes the paywall.</p>
+          <span class="seeit">See the screen <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+        </span>
+        <span class="out"><b>ARPU +10–15%</b><span>second chance</span></span>
+      </button>
+    </div>
+
+    <div class="band">
+      <div class="txt">
+        <div class="lab">Potential outcome</div>
+        <p>Run together, these five move the same funnel at three points: how many steps come before the price, what the paywall says to each person, and what happens when someone says no.</p>
+      </div>
+      <div class="nums">
+        <div><b>+25%</b><span>CR to purchase</span></div>
+        <div><b>+30%</b><span>ARPU</span></div>
+      </div>
+    </div>
+
+    <div class="cta-row">
+      <div class="qr"><img src="img/qr.svg" alt="QR code for the prototype"><span><b>Or open it on your phone</b>Scan to try the flow in your hand.</span></div>
+      <button class="bigbtn" data-view="proto">Open the prototype
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<div class="foot">
+  <div class="wrap">
+    Impact ranges are Adapty's expected effect from teardowns and A/B tests across subscription apps — not measured lift for Clue. Every price, rating, quote and feature line here and in the prototype comes from Clue's own App Store listing, helloclue.com and in-app screens.
+  </div>
+</div>
+</div><!-- /view-over -->
+
+<!-- ======================= PROTOTYPE ======================= -->
+<div class="view" id="view-proto">
+<div class="stage">
+  <div class="phonecol">
+    <div class="tools" id="tools">
+      <div class="seg" id="segLang"><button data-lang="en" class="on">EN</button><button data-lang="de">DE</button><button data-lang="es">ES</button></div>
+      <div class="seg" id="segTheme"><button data-theme="light" class="on">Light</button><button data-theme="dark">Dark</button></div>
+      <button class="demo-btn" id="demoBtn"><svg viewBox="0 0 24 24" width="11" height="11" fill="currentColor"><path d="M7 4.5v15l12-7.5z"/></svg>30-sec walkthrough</button>
+    </div>
+    <div class="phone">
+      <div class="phone-in" id="phoneIn">
+        <div class="island"></div>
+        <div class="sbar" id="sbar">
+          <span>9:41</span>
+          <span class="glyphs">
+            <svg width="17" height="11" viewBox="0 0 17 11" fill="currentColor"><rect x="0" y="7.5" width="3" height="3.5" rx="1"/><rect x="4.5" y="5.5" width="3" height="5.5" rx="1"/><rect x="9" y="3" width="3" height="8" rx="1"/><rect x="13.5" y="0" width="3" height="11" rx="1"/></svg>
+            <svg width="16" height="11" viewBox="0 0 16 11" fill="currentColor"><path d="M8 10.5 5.6 7.9a3.4 3.4 0 0 1 4.8 0L8 10.5Zm0-5.6a6.4 6.4 0 0 0-4.5 1.9L1.7 4.9a9 9 0 0 1 12.6 0l-1.8 1.9A6.4 6.4 0 0 0 8 4.9Z"/></svg>
+            <svg width="25" height="12" viewBox="0 0 25 12" fill="none"><rect x=".6" y=".6" width="20" height="10.8" rx="3" stroke="currentColor" stroke-opacity=".5"/><rect x="2.2" y="2.2" width="16.5" height="7.6" rx="1.8" fill="currentColor"/><path d="M22.3 4.1v3.8a2 2 0 0 0 0-3.8Z" fill="currentColor" fill-opacity=".5"/></svg>
+          </span>
+        </div>
+        <div class="homebar" id="homebar"></div>
+        <div class="finger" id="finger"></div>
+        <div class="screenwrap">
+
+<!-- WELCOME -->
+<section class="scr scr--welcome" data-id="welcome">
+  <div class="scr-top">
+    <div class="cl-dash" id="dash"><button data-p="0" class="on"><i></i></button><button data-p="1"><i></i></button><button data-p="2"><i></i></button></div>
+    <h2 class="cl-wh" id="welH"></h2>
+  </div>
+  <div class="scr-body">
+    <div class="cl-pages" id="pages">
+      <div class="cl-page on">
+        <div class="cl-ring"><svg viewBox="0 0 240 240" id="welRing"></svg>
+          <div class="c"><small id="welToday"></small><strong data-t="wel.days"></strong><span data-t="wel.luteal"></span></div></div>
+      </div>
+      <div class="cl-page">
+        <div class="cl-tiles" id="tiles"></div>
+      </div>
+      <div class="cl-page">
+        <div class="cl-stats">
+          <div class="cl-sc"><h5 data-t="st.h"></h5>
+            <div class="r"><i></i><div><small data-t="st.len"></small><b data-t="st.len.v"></b></div></div>
+            <div class="r w"><i></i><div><small data-t="st.var"></small><b data-t="st.var.v"></b></div></div>
+            <h5 style="margin-top:12px" data-t="st.flow"></h5>
+            <div class="cl-flow"><div><span class="d"></span><span class="m"></span><span class="m"></span><span></span><span></span></div><div><span class="d"></span><span class="d"></span><span class="m"></span><span></span><span></span></div><div><span class="m"></span><span class="m"></span><span></span><span></span><span></span></div><div><span class="d"></span><span class="m"></span><span class="m"></span><span class="m"></span><span></span></div></div>
+          </div>
+          <div class="cl-sc"><h5 data-t="st.cramp"></h5>
+            <div class="cl-bars"><span style="height:30%"></span><span style="height:55%"></span><span style="height:80%"></span><span style="height:100%"></span><span style="height:60%"></span><span style="height:35%"></span><span style="height:20%"></span></div>
+            <h5 style="margin-top:14px" data-t="st.typ"></h5>
+            <small style="font-size:9.5px;color:var(--cl-muted)" data-t="st.anx"></small><div class="cl-sl"><i style="left:55%;width:30%"></i></div>
+            <small style="font-size:9.5px;color:var(--cl-muted);display:block;margin-top:8px" data-t="st.hap"></small><div class="cl-sl"><i style="left:20%;width:28%"></i></div>
+            <small style="font-size:9.5px;color:var(--cl-muted);display:block;margin-top:8px" data-t="st.sen"></small><div class="cl-sl"><i style="left:65%;width:25%"></i></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="scr-foot">
+    <button class="cl-link" data-t="wel.have"></button>
+    <button class="cl-btn" id="welCta" data-go="mode" data-t="wel.cta"></button>
+  </div>
+</section>
+
+<!-- MODE -->
+<section class="scr" data-id="mode">
+  <div class="scr-top">
+    <button class="cl-back" data-back aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+    <h2 class="cl-h" style="margin-top:4px" data-t="mode.h"></h2>
+    <p class="cl-sub" data-t="mode.sub"></p>
+  </div>
+  <div class="scr-body"><div class="cl-modes" id="modeList"></div></div>
+</section>
+
+<!-- LAST PERIOD -->
+<section class="scr" data-id="period">
+  <div class="scr-top">
+    <button class="cl-back" data-back aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+    <div class="cl-icon"><svg viewBox="0 0 24 24"><path d="M12 3.2c-2.6 3.6-5 6.6-5 9.6a5 5 0 0 0 10 0c0-3-2.4-6-5-9.6Z" fill="#E13336"/></svg></div>
+    <h2 class="cl-h" data-t="per.h"></h2>
+    <p class="cl-sub" data-t="per.sub"></p>
+  </div>
+  <div class="scr-body">
+    <div class="cl-cal">
+      <div class="cl-calh"><b id="calM"></b><div>
+        <button id="calPrev" aria-label="Previous month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button>
+        <button id="calNext" aria-label="Next month"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg></button></div></div>
+      <div class="cl-grid" id="calGrid"></div>
+    </div>
+  </div>
+  <div class="scr-foot"><div class="cl-pair"><button class="cl-btn soft" data-go="cycle" data-t="notsure"></button><button class="cl-btn" data-go="cycle" data-t="next"></button></div></div>
+</section>
+
+<!-- CYCLE LENGTH -->
+<section class="scr" data-id="cycle">
+  <div class="scr-top">
+    <button class="cl-back" data-back aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+    <div class="cl-icon teal"><svg viewBox="0 0 24 24" fill="none" stroke="#15748A" stroke-width="1.8"><rect x="3.5" y="4.5" width="17" height="16" rx="2.5"/><path d="M3.5 9h17M8 3v3M16 3v3"/><path d="M7 12.5h2M11 12.5h2M15 12.5h2M7 16h2M11 16h2M15 16h2" stroke-linecap="round"/></svg></div>
+    <h2 class="cl-h" data-t="cyc.h"></h2>
+    <p class="cl-sub" data-t="cyc.sub"></p>
+  </div>
+  <div class="scr-body">
+    <div class="cl-wheelwrap"><div class="cl-wheelbar"></div><div class="cl-wheel" id="wheel"></div></div>
+  </div>
+  <div class="scr-foot"><div class="cl-pair"><button class="cl-btn soft" data-go="loader" data-t="notsure"></button><button class="cl-btn" id="cycNext" data-go="loader" data-t="next"></button></div></div>
+</section>
+
+<!-- LOADER -->
+<section class="scr" data-id="loader">
+  <div class="scr-top" style="padding-top:0"></div>
+  <div class="scr-body">
+    <div class="cl-loadwrap">
+      <img class="cl-bloom" src="img/clue-mark.svg" alt="">
+      <h2 class="cl-load-h" data-t="load.h"></h2>
+      <div class="cl-lsteps" id="loadSteps">
+        <div class="cl-ls"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t"></span></div>
+        <div class="cl-ls"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t"></span></div>
+        <div class="cl-ls"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t"></span></div>
+        <div class="cl-ls"><span class="d"><svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg></span><span class="t"></span></div>
+      </div>
+      <div class="cl-quote"><p id="qText"></p><b data-t="q.who"></b></div>
+      <div class="cl-qd" id="qDots"><i class="on"></i><i></i><i></i></div>
+    </div>
+  </div>
+  <div class="scr-foot"></div>
+</section>
+
+<!-- PAYOFF -->
+<section class="scr cl-pay" data-id="payoff">
+  <div class="scr-top">
+    <button class="cl-back" data-back aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+    <h2 class="cl-h" style="margin-top:2px" id="poH"></h2>
+  </div>
+  <div class="scr-body">
+    <div class="cl-ring"><svg viewBox="0 0 240 240" id="payRing"></svg>
+      <div class="c"><small id="poToday"></small><strong id="poDays"></strong></div></div>
+    <div class="cl-rows">
+      <div class="cl-row"><span class="dot" style="background:var(--cl-red)"></span><div><b id="poNext"></b><span data-t="po.nextL"></span></div></div>
+      <div class="cl-row"><span class="dot" style="background:var(--cl-teal)"></span><div><b id="poFert"></b><span data-t="po.fertL"></span></div></div>
+      <div class="cl-row"><span class="dot" style="background:#D8D6D1"></span><div><b id="poLen"></b><span data-t="po.lenL"></span></div>
+        <div class="pm"><button id="lenMinus" aria-label="Shorter">−</button><button id="lenPlus" aria-label="Longer">+</button></div></div>
+    </div>
+    <div class="cl-lock">
+      <svg viewBox="0 0 24 24"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <div><b data-t="po.lockT"></b><span data-t="po.lockD"></span></div>
+    </div>
+  </div>
+  <div class="scr-foot"><button class="cl-btn" data-go="paywall" data-t="next"></button></div>
+</section>
+
+<!-- PAYWALL -->
+<section class="scr scr--pay" data-id="paywall">
+  <div class="scr-top">
+    <button class="cl-x" id="payClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+  </div>
+  <div class="scr-body">
+    <span class="cl-goal" id="payGoal"></span>
+    <h2 class="cl-payh" id="payH"></h2>
+    <div class="cl-stars" id="stars"></div>
+    <p class="cl-rate" data-th="pw.rate"></p>
+    <p class="cl-rt">I love Clue</p>
+    <p class="cl-rq">“It’s a great app that gives you so much more insight to how you’re feeling at certain times of the month. It’s really helping me pay closer attention to what my body really needs.”</p>
+    <span class="cl-user">Quiggles07</span>
+    <div class="cl-plans" id="planList">
+      <button class="cl-plan" data-v="year"><span class="cl-band" data-t="pw.trial"></span>
+        <span class="in"><span><span class="t" data-t="pw.year"></span><span class="s" data-t="pw.yearS"></span></span><span class="p" data-t="pw.yearP"></span></span></button>
+      <button class="cl-plan" data-v="month">
+        <span class="in"><span><span class="t" data-t="pw.month"></span></span><span class="p" data-t="pw.monthP"></span></span></button>
+    </div>
+  </div>
+  <div class="scr-foot">
+    <button class="cl-btn" id="payCta"></button>
+    <p class="cl-fine" data-th="pw.unlock"></p>
+    <p class="cl-fine" style="margin-top:4px" id="payFine"></p>
+    <div class="cl-legal"><a data-t="lg.terms"></a><a data-t="lg.rest"></a></div>
+  </div>
+</section>
+
+<!-- OFFER -->
+<section class="scr scr--offer sheet" data-id="offer">
+  <div class="scr-top">
+    <div class="cl-off-top">
+      <button class="cl-x" id="offClose" aria-label="Close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+      <span class="cl-save" data-t="of.save"></span>
+    </div>
+    <div class="cl-icon" style="margin-top:0;width:52px;height:52px"><img src="img/clue-mark.svg" alt="" style="width:30px;height:32px"></div>
+    <h2 class="cl-h" data-t="of.h"></h2>
+    <p class="cl-sub" id="offSub"></p>
+  </div>
+  <div class="scr-body">
+    <div class="cl-oprice"><span><b data-t="pw.year"></b><small data-th="of.price"></small></span><span class="p" data-t="of.mo"></span></div>
+    <div class="cl-cmp" id="cmp"></div>
+  </div>
+  <div class="scr-foot">
+    <button class="cl-btn" id="offerCta" data-t="of.cta"></button>
+    <p class="cl-fine" data-t="of.fine"></p>
+  </div>
+</section>
+
+<!-- ACCOUNT (moved past the paywall) -->
+<section class="scr" data-id="account">
+  <div class="scr-top">
+    <div class="cl-icon" style="margin-top:20px;width:70px;height:70px"><img src="img/clue-mark.svg" alt="" style="width:40px;height:43px"></div>
+    <h2 class="cl-h" style="margin-top:20px" data-th="ac.h"></h2>
+    <p class="cl-sub" data-t="ac.sub"></p>
+  </div>
+  <div class="scr-body dock">
+    <div class="cl-saved"><span class="dot"></span><div><b id="acSaved"></b><span id="acMode"></span></div></div>
+    <div style="margin-top:auto"></div>
+  </div>
+  <div class="scr-foot">
+    <div class="cl-auth">
+      <button class="ap" data-go="reminder"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.4 12.6c0-2.3 1.9-3.4 2-3.5a4.3 4.3 0 0 0-3.4-1.8c-1.4-.1-2.8.9-3.5.9s-1.8-.8-3-.8a4.5 4.5 0 0 0-3.8 2.3c-1.6 2.8-.4 7 1.2 9.3.8 1.1 1.7 2.4 2.9 2.3 1.2 0 1.6-.7 3-.7s1.8.7 3 .7c1.3 0 2.1-1.1 2.8-2.3a10 10 0 0 0 1.3-2.6 3.9 3.9 0 0 1-2.5-3.8ZM14.2 5.8A3.9 3.9 0 0 0 15.1 3a4 4 0 0 0-2.6 1.3 3.7 3.7 0 0 0-.9 2.7 3.3 3.3 0 0 0 2.6-1.2Z"/></svg><span data-t="ac.apple"></span></button>
+      <button class="gg" data-go="reminder"><svg viewBox="0 0 24 24"><path fill="#4285F4" d="M22 12.2c0-.7-.1-1.4-.2-2H12v3.8h5.6a4.8 4.8 0 0 1-2.1 3.1v2.6h3.4c2-1.8 3.1-4.5 3.1-7.5Z"/><path fill="#34A853" d="M12 22c2.8 0 5.2-.9 6.9-2.5l-3.4-2.6c-.9.6-2.1 1-3.5 1-2.7 0-5-1.8-5.8-4.3H2.7v2.7A10.4 10.4 0 0 0 12 22Z"/><path fill="#FBBC05" d="M6.2 13.6a6.2 6.2 0 0 1 0-3.9V7H2.7a10.4 10.4 0 0 0 0 9.3l3.5-2.7Z"/><path fill="#EA4335" d="M12 5.8c1.5 0 2.9.5 4 1.5l3-3A10 10 0 0 0 12 2 10.4 10.4 0 0 0 2.7 7l3.5 2.7C7 7.6 9.3 5.8 12 5.8Z"/></svg><span data-t="ac.google"></span></button>
+      <button class="em" data-go="reminder" data-t="ac.email"></button>
+    </div>
+    <p class="cl-signin" data-th="ac.signin"></p>
+  </div>
+</section>
+
+<!-- REMINDER (moved past the paywall) -->
+<section class="scr" data-id="reminder">
+  <div class="scr-top">
+    <button class="cl-back" data-back aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M11 6l-6 6 6 6"/></svg></button>
+    <h2 class="cl-h" style="margin-top:6px" data-t="rm.h"></h2>
+    <p class="cl-sub" data-t="rm.sub"></p>
+  </div>
+  <div class="scr-body">
+    <div class="cl-set">
+      <button id="rmSched"><span style="color:var(--cl-ink);font-size:14px" data-t="rm.sched"></span><span><i id="rmSchedV" style="font-style:normal"></i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/></svg></span></button>
+      <button><span style="color:var(--cl-ink);font-size:14px" data-t="rm.time"></span><span><i style="font-style:normal" data-t="rm.timeV"></i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/></svg></span></button>
+      <button><span style="color:var(--cl-ink);font-size:14px" data-t="rm.msg"></span><span><i style="font-style:normal" data-t="rm.msgV"></i><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9l-4-4L4 16v4Z"/></svg></span></button>
+    </div>
+    <div class="cl-notif"><img src="img/clue-mark.svg" alt=""><div><b>Clue</b><span data-t="rm.msgV"></span></div><small id="rmWhen"></small></div>
+  </div>
+  <div class="scr-foot">
+    <button class="cl-link" id="rmLater" data-t="rm.later"></button>
+    <button class="cl-btn" id="rmYes" data-t="rm.yes"></button>
+  </div>
+  <div class="cl-dlg" id="dlg"><div class="box"><p><b data-t="dl.h"></b><span data-t="dl.p"></span></p>
+    <div class="row"><button id="dlNo" data-t="dl.no"></button><button id="dlYes" data-t="dl.yes"></button></div></div></div>
+</section>
+
+        </div>
+      </div>
+    </div>
+    <div class="demo-cap hidden" id="demoCap"><div class="bar"><i id="demoProg"></i></div><p id="demoTxt"></p><button id="demoStop">Stop</button></div>
+    <div class="chips" id="chips"></div>
+    <p class="chiphint">Jump to any screen — answers already filled in.</p>
+    <div class="qr"><img src="img/qr.svg" alt="QR code for this prototype"><span><b>Open it on your phone</b>Scan to try the flow in your hand.</span></div>
+  </div>
+  <div class="panelcol"><div class="pn" id="panel"></div></div>
+</div>
+</div><!-- /view-proto -->
+
+<script>
+/* ================= copy, per language (phone screens only) ================= */
+var LANGS = ['en','de','es'];
+var LOCALE = {en:'en-US', de:'de-DE', es:'es-ES'};
+var T = {
+ 'wel.h0':  ["Connecting the dots.<em style=\"color:#15748A\">Your cycle, decoded.</em>","Die Punkte verbinden.<em style=\"color:#15748A\">Dein Zyklus, entschlüsselt.</em>","Uniendo los puntos.<em style=\"color:#15748A\">Tu ciclo, descifrado.</em>"],
+ 'wel.h1':  ["Beyond bleeding.<em style=\"color:#E8612C\">The more you track, the more you know.</em>","Mehr als Blutung.<em style=\"color:#E8612C\">Je mehr du trackst, desto mehr weißt du.</em>","Más allá del sangrado.<em style=\"color:#E8612C\">Cuanto más registras, más sabes.</em>"],
+ 'wel.h2':  ["It’s not in your head.<em style=\"color:#1E9C72\">It’s in your data.</em>","Es ist nicht nur in deinem Kopf.<em style=\"color:#1E9C72\">Es steckt in deinen Daten.</em>","No está en tu cabeza.<em style=\"color:#1E9C72\">Está en tus datos.</em>"],
+ 'wel.days':["6 days until your next period","6 Tage bis zu deiner nächsten Periode","6 días para tu próximo periodo"],
+ 'wel.luteal':["About the luteal phase","Über die Lutealphase","Sobre la fase lútea"],
+ 'wel.today':["<b>Today,</b> {d}","<b>Heute,</b> {d}","<b>Hoy,</b> {d}"],
+ 'wel.have':["I have an account","Ich habe ein Konto","Ya tengo una cuenta"],
+ 'wel.cta': ["Get started","Los geht’s","Empezar"],
+ 'tile':    [["PAP smear","Salty","Breast tenderness","Excited","Taken","High sex drive","Running","Bloated"],["Abstrich","Salzig","Brustspannen","Aufgeregt","Genommen","Hohe Libido","Laufen","Aufgebläht"],["Citología","Salado","Pechos sensibles","Emocionada","Tomada","Libido alta","Correr","Hinchazón"]],
+ 'st.h':["Cycle statistics","Zyklusstatistik","Estadísticas del ciclo"],'st.len':["Cycle length","Zykluslänge","Duración del ciclo"],'st.len.v':["30 days","30 Tage","30 días"],
+ 'st.var':["Cycle variation","Zyklusschwankung","Variación del ciclo"],'st.var.v':["8 days","8 Tage","8 días"],'st.flow':["Period flow","Blutungsstärke","Flujo menstrual"],
+ 'st.cramp':["Cramp history","Krampfverlauf","Historial de cólicos"],'st.typ':["Your typical cycle","Dein typischer Zyklus","Tu ciclo típico"],
+ 'st.anx':["Anxious","Ängstlich","Ansiosa"],'st.hap':["Happy","Glücklich","Feliz"],'st.sen':["Sensitive","Empfindlich","Sensible"],
+ 'next':    ["Next","Weiter","Siguiente"],
+ 'notsure': ["Not sure","Nicht sicher","No estoy segura"],
+ 'mode.h':  ["What would you like to do?","Was möchtest du tun?","¿Qué te gustaría hacer?"],
+ 'mode.sub':["Choose the mode which suits you best right now. You can change this later on at any time.","Wähle den Modus, der gerade am besten zu dir passt. Du kannst ihn später jederzeit ändern.","Elige el modo que mejor te encaje ahora. Puedes cambiarlo más adelante en cualquier momento."],
+ 'per.h':   ["When did your last period start?","Wann hat deine letzte Periode begonnen?","¿Cuándo empezó tu último periodo?"],
+ 'per.sub': ["We can then predict your next period.","Dann können wir deine nächste Periode vorhersagen.","Así podremos predecir tu próximo periodo."],
+ 'cyc.h':   ["How long is your average cycle?","Wie lang ist dein Zyklus im Schnitt?","¿Cuánto dura tu ciclo de media?"],
+ 'cyc.sub': ["A little hint—cycles usually last 24-38 days.","Kleiner Tipp: Zyklen dauern meist 24–38 Tage.","Una pista: los ciclos suelen durar entre 24 y 38 días."],
+ 'days':    ["{n} days","{n} Tage","{n} días"],
+ 'load.h':  ["Building your predictions…","Deine Vorhersagen werden erstellt…","Creando tus predicciones…"],
+ 'load.a':  ["Last period started <b>{d}</b>","Letzte Periode begann am <b>{d}</b>","Último periodo: <b>{d}</b>"],
+ 'load.b':  ["Averaging a <b>{n}-day</b> cycle","Zyklus im Schnitt: <b>{n} Tage</b>","Ciclo medio de <b>{n} días</b>"],
+ 'load.c':  ["Setting up <b>{m}</b>","<b>{m}</b> wird eingerichtet","Configurando <b>{m}</b>"],
+ 'load.d':  ["Next period around <b>{d}</b>","Nächste Periode um den <b>{d}</b>","Próximo periodo hacia el <b>{d}</b>"],
+ 'q.who':   ["Verified Clue user","Verified Clue user","Verified Clue user"],
+ 'po.h.period':  ["Your next period is predicted for {d}","Deine nächste Periode wird für den {d} erwartet","Tu próximo periodo se espera el {d}"],
+ 'po.h.conceive':["Your next fertile window starts {d}","Dein nächstes fruchtbares Fenster beginnt am {d}","Tu próxima ventana fértil empieza el {d}"],
+ 'po.h.nobleed': ["Your next cycle starts around {d}","Dein nächster Zyklus beginnt um den {d}","Tu próximo ciclo empieza hacia el {d}"],
+ 'po.h.preg':    ["Your cycle, saved for the weeks ahead","Dein Zyklus, gespeichert für die Wochen danach","Tu ciclo, guardado para las semanas que vienen"],
+ 'po.h.peri':    ["Your next period is predicted for {d}","Deine nächste Periode wird für den {d} erwartet","Tu próximo periodo se espera el {d}"],
+ 'po.today':["<b>Today,</b> {d}","<b>Heute,</b> {d}","<b>Hoy,</b> {d}"],
+ 'po.days': ["{n} days until your next period","{n} Tage bis zu deiner nächsten Periode","{n} días para tu próximo periodo"],
+ 'po.day1': ["1 day until your next period","1 Tag bis zu deiner nächsten Periode","1 día para tu próximo periodo"],
+ 'po.nextL':["Next period · predicted","Nächste Periode · vorhergesagt","Próximo periodo · previsto"],
+ 'po.fertL':["Fertile window · predicted","Fruchtbares Fenster · vorhergesagt","Ventana fértil · prevista"],
+ 'po.lenL': ["Your average cycle","Dein durchschnittlicher Zyklus","Tu ciclo medio"],
+ 'po.lockT':["Advanced predictions are in Clue Plus","Erweiterte Vorhersagen gibt es mit Clue Plus","Las predicciones avanzadas están en Clue Plus"],
+ 'po.lockD':["Cycle analysis and pattern insights that get smarter the more you track.","Zyklusanalyse und Muster, die mit jedem Eintrag genauer werden.","Análisis del ciclo y patrones que mejoran cuanto más registras."],
+ 'pw.h.period':  ["Get ahead of your next period","Sei deiner nächsten Periode voraus","Adelántate a tu próximo periodo"],
+ 'pw.h.conceive':["Know your best days to try","Kenne deine besten Tage","Conoce tus mejores días para intentarlo"],
+ 'pw.h.nobleed': ["See your patterns, no period needed","Sieh deine Muster, auch ohne Periode","Descubre tus patrones, sin periodo"],
+ 'pw.h.preg':    ["Follow your pregnancy week by week","Schwangerschaft Woche für Woche","Sigue tu embarazo semana a semana"],
+ 'pw.h.peri':    ["Understand the changes in your cycle","Verstehe die Veränderungen deines Zyklus","Entiende cómo cambia tu ciclo"],
+ 'pw.goal': ["{m} · next period {d}","{m} · nächste Periode {d}","{m} · próximo periodo {d}"],
+ 'pw.goalP':["{m}","{m}","{m}"],
+ 'pw.rate': ["<b>4.8</b> on the App Store · 405K ratings · <b>100M+</b> downloads","<b>4,8</b> App Store · 405K Bewertungen · <b>100 Mio.+</b> Downloads","<b>4,8</b> App Store · 405K valoraciones · <b>100M+</b> descargas"],
+ 'pw.trial':["7-day free trial","7 Tage kostenlos testen","7 días de prueba gratis"],
+ 'pw.year': ["Yearly plan","Jahresabo","Plan anual"],
+ 'pw.yearS':["12 months • $39.99","12 Monate • $39.99","12 meses • $39.99"],
+ 'pw.yearP':["$3.33 / mo","$3.33 / Monat","$3.33 / mes"],
+ 'pw.month':["Monthly","Monatlich","Mensual"],
+ 'pw.monthP':["$9.99 / mo","$9.99 / Monat","$9.99 / mes"],
+ 'pw.ctaY': ["Start free trial","Gratis testen","Empezar prueba gratis"],
+ 'pw.ctaM': ["Subscribe","Abonnieren","Suscribirme"],
+ 'pw.unlock':["Unlock advanced <b>cycle analysis</b> and <b>predictions</b>, extra <b>tracking options</b>, and more!","Schalte erweiterte <b>Zyklusanalyse</b> und <b>Vorhersagen</b>, zusätzliche <b>Tracking-Optionen</b> und mehr frei!","¡Desbloquea <b>análisis del ciclo</b> y <b>predicciones</b> avanzados, más <b>opciones de registro</b> y mucho más!"],
+ 'pw.fineY':["Free trial is for 7 days and then you’ll be charged. All subscriptions renew automatically. Billed yearly. Cancel anytime.","Die Testphase dauert 7 Tage, danach wird abgebucht. Alle Abos verlängern sich automatisch. Jährliche Abrechnung. Jederzeit kündbar.","La prueba dura 7 días y después se te cobrará. Todas las suscripciones se renuevan automáticamente. Facturación anual. Cancela cuando quieras."],
+ 'pw.fineM':["All subscriptions renew automatically. Billed monthly. Cancel anytime.","Alle Abos verlängern sich automatisch. Monatliche Abrechnung. Jederzeit kündbar.","Todas las suscripciones se renuevan automáticamente. Facturación mensual. Cancela cuando quieras."],
+ 'lg.terms':["Terms of Service","Nutzungsbedingungen","Términos del servicio"],
+ 'lg.rest': ["Restore Purchase","Kauf wiederherstellen","Restaurar compra"],
+ 'of.save': ["25% off","25 % Rabatt","25 % dto."],
+ 'of.h':    ["Before you go: 25% off Clue Plus","Bevor du gehst: 25 % auf Clue Plus","Antes de irte: 25 % en Clue Plus"],
+ 'of.sub':  ["Your {m} predictions stay free. Clue Plus adds the rest.","Deine Vorhersagen bleiben kostenlos. Clue Plus bringt den Rest.","Tus predicciones siguen siendo gratis. Clue Plus añade el resto."],
+ 'of.cols': [["","Free","Plus"],["","Free","Plus"],["","Free","Plus"]],
+ 'of.rows': [["Basic cycle predictions","Essential cycle statistics","Advanced cycle insights, predictions and pattern analysis","Switch tracking modes as your needs change","Clue Connect: share your cycle with a loved one","Unlimited content from medical experts","Unlimited tracking customization"],
+             ["Einfache Zyklusvorhersagen","Grundlegende Zyklusstatistik","Erweiterte Insights, Vorhersagen und Muster","Tracking-Modus jederzeit wechseln","Clue Connect: Zyklus mit jemandem teilen","Unbegrenzt Inhalte von Fachleuten","Tracking unbegrenzt anpassen"],
+             ["Predicciones básicas del ciclo","Estadísticas esenciales del ciclo","Análisis, predicciones y patrones avanzados","Cambia de modo cuando quieras","Clue Connect: comparte tu ciclo","Contenido ilimitado de expertos","Registro personalizable sin límites"]],
+ 'of.price':["12 months • $29.99 <s>$39.99</s>","12 Monate • $29.99 <s>$39.99</s>","12 meses • $29.99 <s>$39.99</s>"],
+ 'of.mo':   ["$2.50 / mo","$2.50 / Monat","$2.50 / mes"],
+ 'of.cta':  ["Get 25% off","25 % Rabatt sichern","Obtener 25 % de descuento"],
+ 'of.fine': ["Billed $29.99 today. Renews automatically. Cancel anytime.","Heute $29.99. Verlängert sich automatisch. Jederzeit kündbar.","Se cobran $29.99 hoy. Se renueva automáticamente. Cancela cuando quieras."],
+ 'ac.h':    ["How would you like to<br>sign up?","Wie möchtest du dich<br>registrieren?","¿Cómo quieres<br>registrarte?"],
+ 'ac.sub':  ["Create a Clue account where all your preferences are stored.","Erstelle ein Clue-Konto, in dem alle deine Einstellungen gespeichert werden.","Crea una cuenta de Clue donde se guardan todas tus preferencias."],
+ 'ac.saved':["Next period {d}","Nächste Periode {d}","Próximo periodo {d}"],
+ 'ac.mode': ["{m} · {n}-day cycle · saved to your account","{m} · {n}-Tage-Zyklus · wird im Konto gespeichert","{m} · ciclo de {n} días · se guarda en tu cuenta"],
+ 'ac.apple':["Sign up with Apple","Mit Apple registrieren","Registrarse con Apple"],
+ 'ac.google':["Sign up with Google","Mit Google registrieren","Registrarse con Google"],
+ 'ac.email':["Sign up with email","Mit E-Mail registrieren","Registrarse con email"],
+ 'ac.signin':["Already have an account? <b>Sign in</b>","Schon ein Konto? <b>Anmelden</b>","¿Ya tienes cuenta? <b>Inicia sesión</b>"],
+ 'rm.h':    ["Would you like to get a period reminder?","Möchtest du eine Erinnerung an deine Periode?","¿Quieres un recordatorio de tu periodo?"],
+ 'rm.sub':  ["Use this reminder to feel prepared before your next period starts.","Mit dieser Erinnerung bist du vorbereitet, bevor deine nächste Periode beginnt.","Usa este recordatorio para estar preparada antes de que empiece tu próximo periodo."],
+ 'rm.sched':["Schedule","Zeitplan","Programación"],
+ 'rm.before':["{n} days before","{n} Tage vorher","{n} días antes"],
+ 'rm.before1':["1 day before","1 Tag vorher","1 día antes"],
+ 'rm.time': ["Time","Uhrzeit","Hora"],
+ 'rm.timeV':["8:00 AM","8:00","8:00"],
+ 'rm.msg':  ["Message","Nachricht","Mensaje"],
+ 'rm.msgV': ["Your new cycle will start soon","Dein neuer Zyklus beginnt bald","Tu nuevo ciclo empezará pronto"],
+ 'rm.later':["Maybe later","Vielleicht später","Quizás más tarde"],
+ 'rm.yes':  ["Yes, turn on","Ja, einschalten","Sí, activar"],
+ 'dl.h':    ["“Clue” Would Like to Send You Notifications","„Clue“ möchte dir Mitteilungen senden","“Clue” quiere enviarte notificaciones"],
+ 'dl.p':    ["Notifications may include alerts, sounds, and icon badges. These can be configured in Settings.","Mitteilungen können Hinweise, Töne und Kennzeichen enthalten. Diese können in den Einstellungen konfiguriert werden.","Las notificaciones pueden incluir alertas, sonidos y globos en iconos. Puedes configurarlas en Ajustes."],
+ 'dl.no':   ["Don’t Allow","Nicht erlauben","No permitir"],
+ 'dl.yes':  ["Allow","Erlauben","Permitir"]
+};
+var MODES = [
+  {k:'period',  c:'var(--m-period)',  t:['Track my period','Meine Periode tracken','Registrar mi periodo'], d:['Log my period and cycle experiences to get predictions.','Periode und Zykluserfahrungen erfassen und Vorhersagen erhalten.','Registra tu periodo y tus experiencias del ciclo para obtener predicciones.']},
+  {k:'conceive',c:'var(--m-conceive)',t:['Try to conceive','Schwanger werden','Intentar concebir'], d:['Get predictions on when it’s best to try to get pregnant.','Vorhersagen, wann die besten Tage sind, um schwanger zu werden.','Predicciones sobre cuándo es mejor intentar quedarte embarazada.']},
+  {k:'nobleed', c:'var(--m-nobleed)', t:['Track without a period','Ohne Periode tracken','Registrar sin periodo'], d:['Keep track of recurring experiences to get insights.','Wiederkehrende Erfahrungen festhalten und Einblicke erhalten.','Haz seguimiento de experiencias recurrentes para obtener información.']},
+  {k:'preg',    c:'var(--m-preg)',    t:['Follow my pregnancy','Meine Schwangerschaft begleiten','Seguir mi embarazo'], d:['Follow my pregnancy with guided weekly content.','Schwangerschaft mit wöchentlichen Inhalten begleiten.','Sigue tu embarazo con contenido semanal guiado.']},
+  {k:'peri',    c:'var(--m-peri)',    t:['Track perimenopause','Perimenopause tracken','Registrar la perimenopausia'], d:['Understand changes as my body transitions to menopause.','Veränderungen verstehen, während mein Körper in die Menopause übergeht.','Entiende los cambios de tu cuerpo en la transición a la menopausia.']}
+];
+var MODE = {}; MODES.forEach(function(m){ MODE[m.k]=m; });
+var TILES = [['#B8364A','<path d="M9 3v6l-4 9a2 2 0 0 0 2 3h10a2 2 0 0 0 2-3l-4-9V3M8 3h8"/>'],['#F07A2E','<path d="M6 18 18 6M9 6l9 9M5 14l5 5"/>'],['#5A73C6','<path d="M4 16c2-6 6-6 8-2 2-4 6-4 8 2"/><circle cx="8" cy="15" r="1"/><circle cx="16" cy="15" r="1"/>'],
+  ['#F2653A','<circle cx="12" cy="12" r="4"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.6 5.6l1.4 1.4M17 17l1.4 1.4M5.6 18.4 7 17M17 7l1.4-1.4"/>'],['#A33A55','<circle cx="12" cy="12" r="8"/><path d="m9 15 6-6"/>'],['#1F9D8A','<path d="M4 16a8 8 0 0 1 16 0"/><path d="m12 16 4-5"/>'],
+  ['#2BA37A','<path d="M5 17c3 1 6 1 9-1l4-4-3-3-3 2-2-3-5 5c-1 1-1 3 0 4Z"/>'],['#5577C9','<path d="M12 4c4 0 7 3 7 7 0 3-2 5-4 6l-1 3h-4l-1-3c-2-1-4-3-4-6 0-4 3-7 7-7Z"/>']];
+var QUOTES = [
+  'I’ve been tracking my cycle for over 2 years now and thanks to your analytics my doctor picked up on some mild PCOS.',
+  'Had been trying to get pregnant for a few months with nothing happening and started using this app to track my period and ovulation and was expecting within two months!',
+  'I think this app is so well made and highly useful. It is invaluable when I have doctor dates. As someone going thru perimenopause I really appreciate the ability to see patterns.'
+];
+
+/* ================= state ================= */
+var DAY=864e5;
+function today(){ var d=new Date(); d.setHours(12,0,0,0); return d; }
+function addD(d,n){ var x=new Date(d); x.setDate(x.getDate()+n); return x; }
+function defaults(){ return { lang:S0.lang, theme:S0.theme, page:0, mode:'period', last:addD(today(),-18), cycle:28, plan:'year', remind:4, calMonth:null }; }
+var S0 = {lang:'en', theme:'light'};
+var S = defaults();
+function L(){ return LANGS.indexOf(S.lang); }
+function t(k,v){ var s=(T[k]||[k])[L()]; if(v) Object.keys(v).forEach(function(x){ s=s.split('{'+x+'}').join(v[x]); }); return s; }
+function fmt(d,o){ return new Intl.DateTimeFormat(LOCALE[S.lang],o||{month:'short',day:'numeric'}).format(d); }
+function modeName(){ return MODE[S.mode].t[L()]; }
+/* the prediction: last period + cycle length, rolled forward past today */
+function predict(){
+  var now=today(), next=addD(S.last,S.cycle);
+  while(next<now) next=addD(next,S.cycle);
+  var start=addD(next,-S.cycle), day=Math.round((now-start)/DAY)+1, until=Math.round((next-now)/DAY);
+  var ov=addD(next,-14), fs=addD(ov,-5);
+  if(ov<now){ ov=addD(ov,S.cycle); fs=addD(fs,S.cycle); }
+  return {next:next, day:day, until:until, fs:fs, fe:ov, fsDay:Math.round((addD(start,S.cycle-19)-start)/DAY)+1};
+}
+
+/* ================= marks ================= */
+function pol(a,r){ var t=(a-90)*Math.PI/180; return [120+r*Math.cos(t),120+r*Math.sin(t)]; }
+function arc(a0,a1,r){ var p=pol(a0,r), q=pol(a1,r), lg=(a1-a0)>180?1:0; return 'M'+p[0].toFixed(1)+' '+p[1].toFixed(1)+' A'+r+' '+r+' 0 '+lg+' 1 '+q[0].toFixed(1)+' '+q[1].toFixed(1); }
+/* their welcome ring: grey track, red period arc from the top, teal fertile arc, the Day pill */
+function ringSVG(el,len,day,fsDay,feDay,id){
+  var r=96, A=function(d){ return (d-1)/len*360; }, h='<defs><linearGradient id="g'+id+'" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#E13336"/><stop offset="1" stop-color="#6E1320"/></linearGradient></defs>';
+  h+='<circle cx="120" cy="120" r="'+r+'" fill="none" stroke="#E9E7E2" stroke-width="20" class="ringtrack"/>';
+  h+='<path d="'+arc(A(1)+3,A(6),r)+'" fill="none" stroke="url(#g'+id+')" stroke-width="20" stroke-linecap="round"/>';
+  h+='<path d="'+arc(A(fsDay),A(feDay),r)+'" fill="none" stroke="#15748A" stroke-width="20" stroke-linecap="round"/>';
+  var fe=pol(A(feDay),r); h+='<circle cx="'+fe[0].toFixed(1)+'" cy="'+fe[1].toFixed(1)+'" r="6" fill="#8FD6EE"/>';
+  var dp=pol(A(1)-8,r+2); h+='<path d="M'+dp[0].toFixed(1)+' '+(dp[1]-9).toFixed(1)+'c-3 4-5 6.5-5 9a5 5 0 0 0 10 0c0-2.5-2-5-5-9Z" fill="#E13336" transform="translate(-14 -10)"/>';
+  var p=pol(A(day),r); h+='<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="17" fill="#fff" stroke="#E0DDD7" stroke-width="1.2" class="ringpill"/>'
+    +'<text x="'+p[0].toFixed(1)+'" y="'+(p[1]-3).toFixed(1)+'" text-anchor="middle" font-family="Figtree,sans-serif" font-size="6.5" fill="#8C8B88">Day</text>'
+    +'<text x="'+p[0].toFixed(1)+'" y="'+(p[1]+8).toFixed(1)+'" text-anchor="middle" font-family="Figtree,sans-serif" font-weight="700" font-size="12" fill="#262626" class="ringpill-t">'+day+'</text>';
+  el.innerHTML=h;
+}
+ringSVG(document.getElementById('welRing'),28,23,11,16,'w');
+document.getElementById('stars').innerHTML=new Array(6).join('<svg viewBox="0 0 24 24"><path d="m12 2.8 2.8 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17.2l-5.7 3.1 1.2-6.4-4.7-4.4 6.4-.8Z"/></svg>');
+
+/* ================= builders (re-run on language change) ================= */
+var chev='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>';
+var ckS='<svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>';
+function buildModes(){ var g=document.getElementById('modeList'); g.innerHTML='';
+  MODES.forEach(function(m){ var b=document.createElement('button'); b.className='cl-mode'; b.dataset.v=m.k; b.style.background=m.c; b.style.color='#fff';
+    b.innerHTML='<div><b>'+m.t[L()]+'</b><span>'+m.d[L()]+'</span></div>'+chev;
+    b.addEventListener('click',function(){ S.mode=m.k; syncScreen(); go('period'); });
+    g.appendChild(b); }); }
+function buildTiles(){ var names=T.tile[L()], g=document.getElementById('tiles'); g.innerHTML='';
+  TILES.forEach(function(x,i){ var d=document.createElement('div'); d.className='cl-tile'+(i%3===1?' dn':'');
+    d.innerHTML='<i style="background:'+x[0]+'"><svg viewBox="0 0 24 24">'+x[1]+'</svg></i>'+names[i]; g.appendChild(d); }); }
+function buildCmp(){ var cols=T['of.cols'][L()], rows=T['of.rows'][L()], h='<div class="r"><span></span><span>'+cols[1]+'</span><span>'+cols[2]+'</span></div>';
+  rows.forEach(function(r,i){ h+='<div class="r"><span>'+r+'</span><span>'+(i<2?ckS:'<b class="no">–</b>')+'</span><span>'+ckS+'</span></div>'; });
+  document.getElementById('cmp').innerHTML=h; }
+function buildCal(){
+  var now=today(), m=S.calMonth||new Date(S.last.getFullYear(),S.last.getMonth(),1);
+  S.calMonth=m;
+  document.getElementById('calM').innerHTML=fmt(m,{month:'long',year:'numeric'})+'<i>›</i>';
+  var min=new Date(now.getFullYear(),now.getMonth()-3,1);
+  document.getElementById('calPrev').disabled = m<=min;
+  document.getElementById('calNext').disabled = m.getFullYear()===now.getFullYear() && m.getMonth()===now.getMonth();
+  var g=document.getElementById('calGrid'), h='';
+  for(var i=0;i<7;i++) h+='<div class="dw">'+fmt(new Date(2026,1,1+i),{weekday:'short'}).replace('.','').toUpperCase().slice(0,3)+'</div>';
+  var first=m.getDay(), dim=new Date(m.getFullYear(),m.getMonth()+1,0).getDate();
+  for(i=0;i<first;i++) h+='<span></span>';
+  for(var d=1; d<=dim; d++){ var dt=new Date(m.getFullYear(),m.getMonth(),d,12);
+    var on=dt.toDateString()===S.last.toDateString(), fut=dt>now, td=dt.toDateString()===now.toDateString();
+    h+='<button data-d="'+d+'"'+(fut?' disabled':'')+' class="'+(on?'on ':'')+(td?'today':'')+'"><span>'+d+'</span></button>'; }
+  g.innerHTML=h;
+  g.querySelectorAll('button[data-d]').forEach(function(b){ b.addEventListener('click',function(){ if(b.disabled) return;
+    S.last=new Date(m.getFullYear(),m.getMonth(),+b.dataset.d,12); buildCal(); syncScreen(); }); });
+}
+document.getElementById('calPrev').addEventListener('click',function(){ S.calMonth=new Date(S.calMonth.getFullYear(),S.calMonth.getMonth()-1,1); buildCal(); });
+document.getElementById('calNext').addEventListener('click',function(){ S.calMonth=new Date(S.calMonth.getFullYear(),S.calMonth.getMonth()+1,1); buildCal(); });
+var IH=44, WMIN=21, WMAX=45, wheel=document.getElementById('wheel'), wTimer=null;
+function buildWheel(){ var h='<div class="cl-sp"></div>'; for(var v=WMIN; v<=WMAX; v++) h+='<div class="cl-it">'+t('days',{n:v})+'</div>';
+  wheel.innerHTML=h+'<div class="cl-sp"></div>'; setWheel(); }
+function paintWheel(){ var idx=Math.round(wheel.scrollTop/IH); wheel.querySelectorAll('.cl-it').forEach(function(it,i){ var d=Math.abs(i-idx);
+  it.style.opacity=d===0?1:(d===1?.5:.22); it.style.fontSize=d===0?'19px':'16px'; it.style.fontWeight=d===0?'600':'500'; }); return idx; }
+function setWheel(){ wheel.scrollTop=(S.cycle-WMIN)*IH; paintWheel(); }
+wheel.addEventListener('scroll',function(){ var idx=paintWheel(); clearTimeout(wTimer);
+  wTimer=setTimeout(function(){ var n=Math.min(WMAX,WMIN+idx); if(n!==S.cycle){ S.cycle=n; } syncScreen(true); },120); });
+function applyStatic(){
+  document.documentElement.lang=S.lang;
+  document.querySelectorAll('[data-t]').forEach(function(el){ el.textContent=t(el.dataset.t); });
+  document.querySelectorAll('[data-th]').forEach(function(el){ el.innerHTML=t(el.dataset.th); });
+  buildModes(); buildTiles(); buildCmp(); buildCal(); buildWheel();
+}
+
+/* ================= everything downstream reads S ================= */
+function setPage(p){ S.page=p;
+  document.querySelectorAll('#pages .cl-page').forEach(function(x,i){ x.classList.toggle('on',i===p); });
+  document.querySelectorAll('#dash button').forEach(function(x,i){ x.classList.toggle('on',i===p); });
+  var w=scr.welcome; w.classList.toggle('p1',p===1); w.classList.toggle('p2',p===2);
+  document.getElementById('welH').innerHTML=t('wel.h'+p); }
+function syncScreen(fromWheel){
+  var P=predict(), m=modeName(), nd=fmt(P.next);
+  setPage(S.page);
+  document.getElementById('welToday').innerHTML=t('wel.today',{d:fmt(new Date(2026,3,23))});
+  document.querySelectorAll('#modeList .cl-mode').forEach(function(b){ b.classList.toggle('on', b.dataset.v===S.mode); });
+  if(!fromWheel) setWheel();
+
+  var st=document.querySelectorAll('#loadSteps .cl-ls .t');
+  st[0].innerHTML=t('load.a',{d:fmt(S.last)});
+  st[1].innerHTML=t('load.b',{n:S.cycle});
+  st[2].innerHTML=t('load.c',{m:m});
+  st[3].innerHTML=t('load.d',{d:nd});
+
+  document.getElementById('poH').textContent=t('po.h.'+S.mode,{d:S.mode==='conceive'?fmt(P.fs):nd});
+  ringSVG(document.getElementById('payRing'),S.cycle,P.day,S.cycle-18,S.cycle-13,'p');
+  document.getElementById('poToday').innerHTML=t('po.today',{d:fmt(today())});
+  document.getElementById('poDays').textContent=P.until===1?t('po.day1'):t('po.days',{n:P.until});
+  document.getElementById('poNext').textContent=fmt(P.next,{weekday:'short',month:'short',day:'numeric'});
+  document.getElementById('poFert').textContent=fmt(P.fs)+' – '+fmt(P.fe);
+  document.getElementById('poLen').textContent=t('days',{n:S.cycle});
+
+  document.getElementById('payGoal').innerHTML='<i style="background:'+MODE[S.mode].c+'"></i>'+(S.mode==='preg'?t('pw.goalP',{m:m}):t('pw.goal',{m:m,d:nd}));
+  document.getElementById('payH').textContent=t('pw.h.'+S.mode);
+  document.querySelectorAll('#planList .cl-plan').forEach(function(b){ b.classList.toggle('on', b.dataset.v===S.plan); });
+  var yr=S.plan==='year';
+  document.getElementById('payCta').textContent=yr?t('pw.ctaY'):t('pw.ctaM');
+  document.getElementById('payFine').textContent=yr?t('pw.fineY'):t('pw.fineM');
+
+  document.getElementById('offSub').textContent=t('of.sub',{m:m});
+  document.getElementById('acSaved').textContent=t('ac.saved',{d:nd});
+  document.getElementById('acMode').textContent=t('ac.mode',{m:m,n:S.cycle});
+  document.getElementById('rmSchedV').textContent=S.remind===1?t('rm.before1'):t('rm.before',{n:S.remind});
+  var rw=addD(P.next,-S.remind);
+  document.getElementById('rmWhen').textContent=fmt(rw)+(S.lang==='en'?', 8:00 AM':', 8:00');
+}
+
+/* ================= router ================= */
+var ORDER=['welcome','mode','period','cycle','loader','payoff','paywall','offer','account','reminder'];
+var LABEL={welcome:'Welcome',mode:'Mode',period:'Last period',cycle:'Cycle length',loader:'Loader',payoff:'Payoff',paywall:'Paywall',offer:'Offer on close',account:'Sign-up',reminder:'Reminder'};
+var scr={}, hist=[], cur='welcome', loadTimers=[];
+document.querySelectorAll('.scr').forEach(function(s){ scr[s.dataset.id]=s; });
+
+function chrome(){ var dark=S.theme==='dark';
+  document.getElementById('sbar').classList.toggle('light',dark); document.getElementById('homebar').classList.toggle('light',dark); }
+function enter(id){ chrome(); paintChips(); paintPanel(); clearLoad(); document.getElementById('dlg').classList.remove('on');
+  if(id==='loader') runLoader(); if(id==='cycle') requestAnimationFrame(setWheel); }
+function go(id,opts){
+  opts=opts||{}; if(id===cur) return;
+  var from=scr[cur], to=scr[id];
+  if(!opts.back) hist.push(cur);
+  if(from){ from.classList.remove('is-active');
+    if(!to.classList.contains('sheet') && !from.classList.contains('sheet')) from.classList.add('is-past'); }
+  Object.keys(scr).forEach(function(k){ if(k!==id&&k!==cur) scr[k].classList.remove('is-active'); });
+  if(id==='offer') scr.paywall.classList.add('is-active');
+  to.classList.remove('is-past'); to.classList.add('is-active');
+  cur=id; enter(id);
+}
+function back(){
+  if(!hist.length) return;
+  var prev=hist.pop();
+  scr[cur].classList.remove('is-active');
+  scr[prev].classList.remove('is-past'); scr[prev].classList.add('is-active');
+  cur=prev; enter(prev);
+}
+function jump(id){
+  var i=ORDER.indexOf(id);
+  Object.keys(scr).forEach(function(k){ scr[k].classList.add('nofx'); scr[k].classList.remove('is-active','is-past'); });
+  hist=ORDER.slice(0,i<0?0:i).filter(function(k){ return k!=='loader' && k!=='offer'; });
+  if(id==='offer') scr.paywall.classList.add('is-active');
+  scr[id].classList.add('is-active'); cur=id;
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){
+    Object.keys(scr).forEach(function(k){ scr[k].classList.remove('nofx'); }); }); });
+  syncScreen(); enter(id);
+}
+function paintChips(){
+  var c=document.getElementById('chips');
+  if(!c.children.length){
+    ORDER.forEach(function(id){
+      var b=document.createElement('button'); b.className='chip'+(id==='offer'?' offer':''); b.textContent=LABEL[id];
+      b.dataset.id=id; b.onclick=function(){ stopDemo(); jump(id); }; c.appendChild(b);
+    });
+  }
+  c.querySelectorAll('.chip').forEach(function(b){ b.classList.toggle('on', b.dataset.id===cur); });
+}
+
+function clearLoad(){ loadTimers.forEach(clearTimeout); loadTimers=[]; }
+function runLoader(){
+  var k=demo.on?0.48:1;
+  var steps=[].slice.call(document.querySelectorAll('#loadSteps .cl-ls'));
+  steps.forEach(function(s){ s.classList.remove('on'); });
+  function showQuote(i){
+    document.getElementById('qText').textContent='“'+QUOTES[i]+'”';
+    document.querySelectorAll('#qDots i').forEach(function(d,n){ d.classList.toggle('on',n===i); });
+  }
+  showQuote(S.mode==='conceive'?1:(S.mode==='peri'?2:0));
+  steps.forEach(function(s,i){ loadTimers.push(setTimeout(function(){ s.classList.add('on'); },(600+i*900)*k)); });
+  loadTimers.push(setTimeout(function(){ showQuote((S.mode==='conceive'?2:1)); },2600*k));
+  loadTimers.push(setTimeout(function(){ if(cur==='loader') go('payoff'); },5200*k));
+}
+
+/* ================= wiring ================= */
+document.querySelectorAll('[data-go]').forEach(function(b){ b.addEventListener('click',function(){ if(!b.disabled) go(b.dataset.go); }); });
+document.querySelectorAll('[data-back]').forEach(function(b){ b.addEventListener('click',back); });
+document.querySelectorAll('#dash button').forEach(function(b){ b.addEventListener('click',function(){ setPage(+b.dataset.p); }); });
+(function(){ var el=document.getElementById('pages'), x0=null;
+  el.addEventListener('pointerdown',function(e){ x0=e.clientX; });
+  el.addEventListener('pointerup',function(e){ if(x0===null) return; var dx=e.clientX-x0; x0=null;
+    if(Math.abs(dx)>40) setPage(Math.max(0,Math.min(2,S.page+(dx<0?1:-1)))); }); })();
+document.querySelectorAll('#planList .cl-plan').forEach(function(b){ b.addEventListener('click',function(){ S.plan=b.dataset.v; syncScreen(); }); });
+document.getElementById('payClose').addEventListener('click',function(){ go('offer'); });
+document.getElementById('offClose').addEventListener('click',function(){ go('account'); });
+document.getElementById('payCta').addEventListener('click',function(){ go('account'); });
+document.getElementById('offerCta').addEventListener('click',function(){ go('account'); });
+document.getElementById('lenMinus').addEventListener('click',function(){ S.cycle=Math.max(WMIN,S.cycle-1); syncScreen(); });
+document.getElementById('lenPlus').addEventListener('click',function(){ S.cycle=Math.min(WMAX,S.cycle+1); syncScreen(); });
+document.getElementById('rmSched').addEventListener('click',function(){ S.remind=S.remind>=7?1:S.remind+1; syncScreen(); });
+document.getElementById('rmYes').addEventListener('click',function(){ document.getElementById('dlg').classList.add('on'); });
+document.getElementById('rmLater').addEventListener('click',function(){ jump('welcome'); });
+document.getElementById('dlNo').addEventListener('click',function(){ jump('welcome'); });
+document.getElementById('dlYes').addEventListener('click',function(){ jump('welcome'); });
+
+function setSeg(id,attr,val){ document.querySelectorAll('#'+id+' button').forEach(function(b){ b.classList.toggle('on', b.dataset[attr]===val); }); }
+function setLang(l){ S.lang=l; S0.lang=l; setSeg('segLang','lang',l); applyStatic(); syncScreen(); paintPanel(); }
+function setTheme(th){ S.theme=th; S0.theme=th; document.getElementById('phoneIn').classList.toggle('dark',th==='dark'); setSeg('segTheme','theme',th); chrome(); }
+document.querySelectorAll('#segLang button').forEach(function(b){ b.addEventListener('click',function(){ stopDemo(); setLang(b.dataset.lang); }); });
+document.querySelectorAll('#segTheme button').forEach(function(b){ b.addEventListener('click',function(){ setTheme(b.dataset.theme); }); });
+
+/* ================= the 30-second walkthrough ================= */
+var demo={tok:0,on:false,t0:0,iv:null}, finger=document.getElementById('finger'), phoneIn=document.getElementById('phoneIn');
+function W(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+function cap(txt){ document.getElementById('demoTxt').textContent=txt; }
+async function tap(sel,tok){
+  if(demo.tok!==tok) throw 0;
+  var el=document.querySelector(sel); if(!el) return;
+  var r=el.getBoundingClientRect(), p=phoneIn.getBoundingClientRect(), z=p.width/phoneIn.offsetWidth||1;
+  finger.style.left=((r.left-p.left+r.width/2)/z)+'px'; finger.style.top=((r.top-p.top+r.height/2)/z)+'px';
+  finger.classList.add('show'); await W(380); if(demo.tok!==tok) throw 0;
+  finger.classList.add('press'); await W(120); finger.classList.remove('press'); el.click(); await W(160);
+  if(demo.tok!==tok) throw 0;
+}
+async function pause(ms,tok){ await W(ms); if(demo.tok!==tok) throw 0; }
+function startDemo(){
+  stopDemo(); var tok=++demo.tok; demo.on=true; demo.t0=Date.now();
+  var keep={lang:S.lang,theme:S.theme}; S=defaults(); S.lang=keep.lang; S.theme=keep.theme;
+  applyStatic(); jump('welcome');
+  document.getElementById('demoCap').classList.remove('hidden');
+  demo.iv=setInterval(function(){ document.getElementById('demoProg').style.width=Math.min(100,(Date.now()-demo.t0)/290)+'%'; },200);
+  (async function(){
+    try{
+      cap('Your welcome pages as they ship. The button now says Get started, not Create account.'); await pause(1300,tok);
+      await tap('#dash [data-p="1"]',tok); await pause(650,tok);
+      await tap('#welCta',tok);
+      cap('Straight to the question that matters: what they want Clue for.'); await pause(900,tok);
+      await tap('#modeList [data-v=conceive]',tok);
+      cap('When their last period started, on your calendar.'); await pause(600,tok);
+      var bs=[].slice.call(document.querySelectorAll('#calGrid button[data-d]:not([disabled])')); var target=bs[Math.max(0,bs.indexOf(document.querySelector('#calGrid button.on'))-2)];
+      if(target){ target.id='demoDay'; await tap('#demoDay',tok); target.removeAttribute('id'); }
+      await pause(350,tok); await tap('[data-id=period] .cl-btn:not(.soft)',tok);
+      cap('Their average cycle, on your wheel.'); await pause(450,tok);
+      var wb=Math.min(WMAX,S.cycle+2); wheel.scrollTo({top:(wb-WMIN)*IH,behavior:'smooth'}); await pause(1000,tok);
+      S.cycle=wb; setWheel(); syncScreen(true);
+      await tap('#cycNext',tok);
+      cap('Their answers, read back while Clue works.'); await pause(2600,tok);
+      cap('The payoff: their fertile window and next period, on your own ring.'); await pause(1300,tok);
+      await tap('#lenMinus',tok); await pause(700,tok);
+      await tap('[data-id=payoff] .cl-btn',tok);
+      cap('The paywall names their mode and date, with your 4.8 and 100M+ downloads.'); await pause(1700,tok);
+      await tap('#planList [data-v=month]',tok); await pause(600,tok); await tap('#planList [data-v=year]',tok); await pause(400,tok);
+      cap('They close it. One second chance, on your own $29.99 price.'); await tap('#payClose',tok); await pause(2300,tok);
+      cap('Sign-up, reminders and permissions come after this, once there is something to save.');
+      finger.classList.remove('show'); await pause(2400,tok); stopDemo();
+    }catch(e){}
+  })();
+}
+function stopDemo(){ if(!demo.on) return; demo.tok++; demo.on=false; clearInterval(demo.iv); finger.classList.remove('show','press');
+  document.getElementById('demoCap').classList.add('hidden'); }
+document.getElementById('demoBtn').addEventListener('click',startDemo);
+document.getElementById('demoStop').addEventListener('click',stopDemo);
+phoneIn.addEventListener('pointerdown',function(e){ if(e.isTrusted && demo.on) stopDemo(); });
+</script>
+<script>
+/* ---- the short panel: hypothesis + potential outcome, nothing else ---- */
+var PANEL = {
+welcome:{n:1,t:'Ask for the account after the paywall',
+ hyp:'Try <b>Get started</b> where today’s button says Create account, <b>because right now the next thing after these pages is a sign-up choice and a name and email form, before anyone has told Clue a thing about their cycle</b>.',
+ kept:'Your three welcome pages: the cycle ring, the symptom tiles, the statistics cards, the dash pager and “I have an account”.',
+ out:'CR +8% · ARPU +17%'},
+mode:{n:3,t:'Open the paywall on their mode and your 4.8',
+ hyp:'Try carrying this answer all the way to the paywall headline, <b>because today someone who taps “Try to conceive” still meets a paywall that says “Choose your plan”</b>. Pick a different card and the payoff and paywall change with it.',
+ kept:'All five mode cards in your colours and order, with their blobs and chevrons. “Nice to meet you”, the birthday wheel and “You and Clue” stay before this screen, as they are today.',
+ out:'CR +15–20%'},
+period:{n:2,t:'Show the next-period date before the price',
+ hyp:'Try treating this answer as the first half of a prediction, <b>because Clue already turns a last period and a cycle length into a date, and today the flow never shows that date before the paywall</b>.',
+ kept:'Your drop icon, calendar with month arrows and the Not sure / Next pair. One calendar replaces today’s month wheel plus calendar: the same question on one screen.',
+ out:'CR +10–15%'},
+cycle:{n:2,t:'Show the next-period date before the price',
+ hyp:'Try letting the wheel move the date, <b>because the cycle length is the other half of the prediction</b>. Scroll it and the loader, the payoff, the paywall and the reminder all change.',
+ kept:'Your wheel, the pink highlight bar, the calendar icon and the hint line. Health conditions, “We’re here to support you” and birth control follow this screen, as they do today.',
+ out:'CR +10–15%'},
+loader:{n:2,t:'Show the next-period date before the price',
+ hyp:'Try reading their answers back while Clue works, <b>because a loader only earns its seconds when something personal comes out of it</b>. The quotes are verified-user quotes from helloclue.com, matched to the mode they picked.',
+ kept:'Your cream surface, your flower mark and your type.',
+ out:'CR +10–15%'},
+payoff:{n:2,t:'Show the next-period date before the price',
+ hyp:'Try showing their next period, fertile window and today’s cycle day on your own ring, <b>because the ring on your first welcome page is a promise, and this is the first time the flow keeps it with their own numbers</b>. Tap − or + and the dates move.',
+ kept:'Your welcome ring, with its red period arc, teal fertile arc and Day pill, now drawn from their answers. Advanced predictions stay behind Clue Plus, as in the app.',
+ out:'CR +10–15%'},
+paywall:{n:3,t:'Open the paywall on their mode and your 4.8',
+ hyp:'Try a headline that names their mode and their date, with your 4.8 from 405K ratings and 100M+ downloads above the review, <b>because today every paywall reads “Choose your plan” and your two biggest proof points appear nowhere in the flow</b>.',
+ kept:'Your X, the stars, the “I love Clue” review and username pill, the plum 7-day-trial card, the monthly card, the teal button and your footer copy word for word.',
+ out:'CR +15–20%'},
+offer:{n:5,t:'A second chance on close, at your $29.99 price',
+ hyp:'Try a 25%-off yearly plan with no trial when someone closes the paywall, <b>because $29.99 is already a Clue Plus price on your App Store listing and 25% off is already your web offer on helloclue.com</b>. It also tests paying today against a trial.',
+ kept:'Your plum plan card, teal button and flower mark. The Free and Plus rows are the plan comparison from helloclue.com.',
+ out:'ARPU +10–15%'},
+account:{n:1,t:'Ask for the account after the paywall',
+ hyp:'Try asking for the account here, after the paywall, <b>because by now there is something worth saving: a prediction, a mode and maybe a subscription</b>.',
+ kept:'Your sign-up screen as it ships: the flower mark, the Apple, Google and email buttons and your copy. The name and email form follows the email button, as today.',
+ out:'CR +8% · ARPU +17%'},
+reminder:{n:4,t:'Move permissions and consent toggles past the paywall',
+ hyp:'Try the reminder, the notification prompt, the tracking prompt and the privacy toggles here, <b>because today nine of the 24 steps before the price ask for a permission or a setting</b>. The reminder now shows their real date. Tap Schedule to change it.',
+ kept:'Your reminder screen with its Schedule, Time and Message rows, the notification preview, Maybe later and Yes, turn on. “Help us spread the word” and “Your privacy comes first” follow it, unchanged.',
+ out:'CR +10–15%'}
+};
+
+function outBlock(lab,val){
+  return '<div class="pn-out"><div class="lab">'+lab+'</div><div class="v">'+val+'</div></div>';
+}
+function paintPanel(){
+  var d=PANEL[cur]; if(!d) return;
+  var h='';
+  if(d.ctx){
+    h += '<div class="pn-n ctx">Context · no change proposed</div><h3 class="pn-t">'+d.t+'</h3>'
+       + '<div class="pn-kept">'+d.kept+'</div>';
+  } else {
+    h += '<div class="pn-n">Idea '+d.n+' of 5</div><h3 class="pn-t">'+d.t+'</h3>'
+       + '<p class="pn-hyp">'+d.hyp+'</p>'
+       + outBlock('Potential outcome · based on Adapty data', d.out);
+    h += '<div class="pn-kept"><b>Your design, unchanged.</b> '+d.kept+'</div>';
+  }
+  if(S.lang!=='en') h += '<div class="pn-kept"><b>Language.</b> Screens are shown in '+(S.lang==='de'?'German':'Spanish')+' to show one flow serving every market. Translations are ours. Store prices stay as published in US dollars; the review and loader quotes stay verbatim in English.</div>';
+  h += '<div class="pn-foot">Ranges are Adapty’s expected effect from tests across 30,000+ subscription apps — not measured lift for Clue. '
+     + 'Prices, ratings, quotes and feature lines come from your own published material.</div>';
+  document.getElementById('panel').innerHTML = h;
+}
+
+/* ---- views, jumps from the overview ---- */
+function showView(v){
+  if(v!=='proto') stopDemo();
+  document.querySelectorAll('.view').forEach(function(x){ x.classList.remove('on'); });
+  document.getElementById('view-'+v).classList.add('on');
+  document.querySelectorAll('.nav-links button[data-view]').forEach(function(b){ b.classList.toggle('on', b.dataset.view===v); });
+  window.scrollTo(0,0);
+  if(v==='proto' && cur==='cycle') requestAnimationFrame(setWheel);
+}
+document.querySelectorAll('[data-view]').forEach(function(b){ b.addEventListener('click',function(){ showView(b.dataset.view); }); });
+document.querySelectorAll('.idea[data-jump]').forEach(function(b){
+  b.addEventListener('click',function(){ showView('proto'); jump(b.dataset.jump); });
+});
+document.querySelectorAll('[data-demo]').forEach(function(b){ b.addEventListener('click',function(){ showView('proto'); startDemo(); }); });
+
+applyStatic();
+scr.welcome.classList.add('is-active');
+syncScreen(); chrome(); paintChips(); paintPanel();
+if(/[?&]open=proto/.test(location.search)) showView('proto');
+</script>
+</body>
+</html>
